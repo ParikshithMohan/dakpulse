@@ -3,24 +3,24 @@
 ---
 
 <dialog id="qr-scanner-modal" class="native-modal" aria-labelledby="qr-modal-title">
-  <div class="p-6">
+  <div class="p-5">
     <!-- Header -->
-    <div class="flex items-center justify-between pb-4 border-b border-[var(--border)]">
+    <div class="flex items-center justify-between pb-3.5 border-b border-[var(--border)]">
       <div class="flex items-center gap-2.5">
-        <div class="w-8 h-8 rounded-lg bg-rose-500/10 text-rose-500 flex items-center justify-center font-bold">
+        <div class="w-7 h-7 rounded bg-red-500/10 text-red-500 flex items-center justify-center font-bold text-xs">
           📷
         </div>
         <div>
-          <h3 id="qr-modal-title" class="text-sm font-bold text-[var(--text-main)]">
-            Scan Consignment Receipt
+          <h3 id="qr-modal-title" class="text-xs font-bold uppercase tracking-wider text-[var(--text-main)]">
+            Optical Barcode Scanner
           </h3>
-          <p class="text-[11px] text-[var(--text-muted)]">Point camera at QR code or barcode</p>
+          <p class="text-[11px] text-[var(--text-muted)]">Align postal receipt barcode or QR code</p>
         </div>
       </div>
       <button
         id="close-qr-scanner"
         type="button"
-        class="w-8 h-8 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-card-hover)] flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+        class="w-7 h-7 rounded text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-card-hover)] flex items-center justify-center transition-colors focus:outline-none cursor-pointer"
         aria-label="Close scanner dialog"
       >
         ✕
@@ -28,17 +28,17 @@
     </div>
 
     <!-- Scanner Viewport -->
-    <div class="mt-4 relative rounded-xl overflow-hidden bg-black aspect-video flex items-center justify-center border border-[var(--border)]">
+    <div class="mt-3.5 relative rounded-md overflow-hidden bg-black aspect-video flex items-center justify-center border border-[var(--border)]">
       <div id="qr-reader" class="w-full h-full"></div>
       
       <!-- Overlay Guides -->
       <div id="scanner-overlay" class="absolute inset-0 pointer-events-none flex flex-col items-center justify-center">
-        <div class="w-48 h-28 border-2 border-rose-500/70 rounded-lg relative">
-          <div class="absolute -top-1 -left-1 w-3 h-3 border-t-2 border-l-2 border-rose-500"></div>
-          <div class="absolute -top-1 -right-1 w-3 h-3 border-t-2 border-r-2 border-rose-500"></div>
-          <div class="absolute -bottom-1 -left-1 w-3 h-3 border-b-2 border-l-2 border-rose-500"></div>
-          <div class="absolute -bottom-1 -right-1 w-3 h-3 border-b-2 border-r-2 border-rose-500"></div>
-          <div class="w-full h-0.5 bg-rose-500/50 absolute top-1/2 -translate-y-1/2 animate-pulse"></div>
+        <div class="w-44 h-24 border border-red-500/60 rounded relative">
+          <div class="absolute -top-1 -left-1 w-2.5 h-2.5 border-t-2 border-l-2 border-red-500"></div>
+          <div class="absolute -top-1 -right-1 w-2.5 h-2.5 border-t-2 border-r-2 border-red-500"></div>
+          <div class="absolute -bottom-1 -left-1 w-2.5 h-2.5 border-b-2 border-l-2 border-red-500"></div>
+          <div class="absolute -bottom-1 -right-1 w-2.5 h-2.5 border-b-2 border-r-2 border-red-500"></div>
+          <div class="w-full h-0.5 bg-red-500/50 absolute top-1/2 -translate-y-1/2 animate-pulse"></div>
         </div>
       </div>
     </div>
@@ -46,20 +46,20 @@
     <!-- Live Status Pill -->
     <div
       id="qr-scanner-status"
-      class="mt-4 px-3 py-2 rounded-lg text-xs text-center font-medium bg-[var(--bg-page)] text-[var(--text-muted)] border border-[var(--border)]"
+      class="mt-3 px-3 py-1.5 rounded text-[11px] text-center font-mono bg-[var(--bg-page)] text-[var(--text-muted)] border border-[var(--border)]"
       role="status"
     >
       Click "Start Camera" to scan your consignment slip
     </div>
 
     <!-- Modal Actions -->
-    <div class="mt-5 flex items-center justify-between gap-3 pt-3 border-t border-[var(--border)]">
-      <span class="text-[11px] text-[var(--text-subtle)]">Supports Code-128 & QR</span>
+    <div class="mt-4 flex items-center justify-between gap-3 pt-3 border-t border-[var(--border)]">
+      <span class="text-[10px] text-[var(--text-subtle)] font-mono">Code-128 & QR Compatible</span>
       <div class="flex items-center gap-2">
         <button
           id="toggle-camera-btn"
           type="button"
-          class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-rose-600 hover:bg-rose-700 text-white shadow-md shadow-rose-600/20 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+          class="px-3 py-1.5 rounded text-xs font-semibold bg-red-600 hover:bg-red-500 text-white shadow-xs transition-colors focus:outline-none cursor-pointer"
         >
           Start Camera
         </button>

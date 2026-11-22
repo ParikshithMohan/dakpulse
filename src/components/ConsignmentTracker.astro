@@ -12,48 +12,63 @@ interface Props {
 const { initialData = null, initialAwb = '' } = Astro.props;
 ---
 
-<div class="space-y-10">
-  <!-- Search Box Header Card -->
-  <div class="p-6 sm:p-10 rounded-3xl border border-[var(--border)] bg-gradient-to-b from-[var(--bg-card)] to-[var(--bg-card)]/50 shadow-xl relative overflow-hidden">
-    <!-- Subtle Ambient Glow -->
-    <div class="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-rose-600/10 blur-3xl pointer-events-none"></div>
-
-    <div class="max-w-2xl mx-auto text-center space-y-3 relative z-10">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
-        <span>🇮🇳</span> Official Consignment Tracker
+<div class="space-y-8">
+  <!-- Astryx Precision Command Header -->
+  <div class="astryx-card p-6 sm:p-8">
+    <div class="max-w-2xl mx-auto space-y-4">
+      <div class="flex items-center justify-between border-b border-[var(--border)] pb-3">
+        <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--text-subtle)]">
+          <span class="w-2 h-2 rounded-full bg-red-500"></span>
+          <span>India Post Consignment Telemetry</span>
+        </div>
+        <div class="text-[11px] font-mono text-[var(--text-subtle)]">
+          Press <kbd class="px-1.5 py-0.5 rounded bg-[var(--bg-page)] border border-[var(--border)] text-[10px] text-[var(--text-muted)] font-mono">/</kbd> to focus
+        </div>
       </div>
-      <h1 class="text-3xl sm:text-4xl font-black tracking-tight text-[var(--text-main)]">
-        Speed Post Tracking for India Post
-      </h1>
-      <p class="text-sm text-[var(--text-muted)] max-w-lg mx-auto">
-        Live status, sorting hub scan events, and interactive route mapping for any Indian Speed Post consignment.
-      </p>
+
+      <div class="space-y-1">
+        <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-[var(--text-main)]">
+          Track India Post Consignment
+        </h1>
+        <p class="text-xs text-[var(--text-muted)]">
+          Real-time scan logs, sorting hub transit routing, and delivery verification.
+        </p>
+      </div>
 
       <!-- Main Search Form -->
-      <form id="tracking-search-form" class="mt-8 flex flex-col sm:flex-row items-center gap-2 max-w-xl mx-auto">
+      <form id="tracking-search-form" class="mt-4 flex flex-col sm:flex-row items-center gap-2">
         <div class="relative w-full flex-1">
+          <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-subtle)] pointer-events-none">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+
           <input
             id="consignment-input"
             type="text"
             name="consignment"
             value={initialAwb}
-            placeholder="e.g. CX137150258IN or JA075033095IN"
+            placeholder="Enter 13-character AWB (e.g. ED451209384IN)"
             autocomplete="off"
             spellcheck="false"
             required
-            class="w-full h-13 pl-4 pr-24 rounded-2xl border border-[var(--border)] bg-[var(--bg-page)] text-[var(--text-main)] placeholder-[var(--text-subtle)] text-sm sm:text-base font-mono font-semibold uppercase tracking-wider focus:outline-none focus:ring-2 focus:ring-rose-500 transition-all shadow-inner"
+            class="w-full h-11 pl-10 pr-20 rounded-md border border-[var(--border)] bg-[var(--bg-page)] text-[var(--text-main)] placeholder-[var(--text-subtle)] text-xs sm:text-sm font-mono font-semibold uppercase tracking-wider focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all shadow-xs"
           />
 
           <!-- Scanner Trigger Button -->
-          <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+          <div class="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center">
             <button
               id="open-scanner-btn"
               type="button"
-              class="h-9 px-2.5 rounded-xl border border-[var(--border)] bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] text-xs font-medium text-[var(--text-muted)] hover:text-rose-500 flex items-center gap-1.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 cursor-pointer"
-              title="Scan Barcode / QR with camera"
+              class="h-8 px-2 rounded border border-[var(--border)] bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] text-xs font-medium text-[var(--text-muted)] hover:text-red-500 flex items-center gap-1.5 transition-colors focus:outline-none cursor-pointer"
+              title="Scan Barcode or QR Code with camera"
             >
-              <span>📷</span>
-              <span class="hidden sm:inline">Scan</span>
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              <span class="text-[11px] hidden sm:inline">Camera</span>
             </button>
           </div>
         </div>
@@ -61,65 +76,38 @@ const { initialData = null, initialAwb = '' } = Astro.props;
         <button
           type="submit"
           id="submit-track-btn"
-          class="w-full sm:w-auto h-13 px-8 rounded-2xl bg-gradient-to-r from-rose-600 to-red-500 hover:from-rose-500 hover:to-red-400 text-white font-bold text-sm tracking-wide shadow-lg shadow-rose-600/25 transition-all flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-rose-500 cursor-pointer"
+          class="w-full sm:w-auto h-11 px-6 rounded-md bg-red-600 hover:bg-red-500 text-white font-semibold text-xs tracking-wide shadow-xs transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-red-500 cursor-pointer"
         >
-          <span id="btn-text">Track</span>
-          <span id="btn-spinner" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+          <span id="btn-text">Search Consignment</span>
+          <span id="btn-spinner" class="hidden w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
         </button>
       </form>
 
-      <!-- Quick Sample Parcels -->
-      <div class="pt-4 flex flex-wrap items-center justify-center gap-2 text-xs">
-        <span class="text-[var(--text-subtle)] font-medium">Try Live Samples:</span>
-        <button
-          type="button"
-          class="sample-pill px-2.5 py-1 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono text-xs hover:scale-105 transition-transform cursor-pointer"
-          data-awb="CX137150258IN"
-        >
-          CX137150258IN (Real Live AWB)
-        </button>
-        <button
-          type="button"
-          class="sample-pill px-2.5 py-1 rounded-lg border border-blue-500/30 bg-blue-500/10 text-blue-600 dark:text-blue-400 font-mono text-xs hover:scale-105 transition-transform cursor-pointer"
-          data-awb="JA075033095IN"
-        >
-          JA075033095IN (Live Speed Post)
-        </button>
-        <button
-          type="button"
-          class="sample-pill px-2.5 py-1 rounded-lg border border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400 font-mono text-xs hover:scale-105 transition-transform cursor-pointer"
-          data-awb="EK982143051IN"
-        >
-          EK982143051IN (In Transit)
-        </button>
-        <button
-          type="button"
-          class="sample-pill px-2.5 py-1 rounded-lg border border-rose-500/30 bg-rose-500/10 text-rose-600 dark:text-rose-400 font-mono text-xs hover:scale-105 transition-transform cursor-pointer"
-          data-awb="EU781920394IN"
-        >
-          EU781920394IN (Exception)
-        </button>
+      <!-- Standard Format Guide -->
+      <div class="flex items-center justify-between text-[11px] text-[var(--text-subtle)] pt-1">
+        <span>Standard: 2 Letters + 9 Digits + "IN" (Speed Post, Reg. Post, Air Parcel)</span>
+        <span class="font-mono text-[10px] text-emerald-500">Live Scraper v3</span>
       </div>
 
-      <!-- Recent Consignments -->
-      <div id="recent-searches-container" class="hidden pt-3 flex-wrap items-center justify-center gap-2 text-xs">
-        <span class="text-[var(--text-subtle)]">Recent:</span>
+      <!-- Recent Consignments (Populated strictly from user's local search history) -->
+      <div id="recent-searches-container" class="hidden pt-2 items-center gap-2 text-xs border-t border-[var(--border)]">
+        <span class="text-[var(--text-subtle)] text-[11px]">Recent Lookups:</span>
         <div id="recent-chips" class="inline-flex flex-wrap gap-1.5"></div>
-        <button id="clear-recent-btn" type="button" class="text-[11px] text-[var(--text-subtle)] hover:text-rose-500 underline ml-1 cursor-pointer">
-          Clear
+        <button id="clear-recent-btn" type="button" class="text-[10px] text-[var(--text-subtle)] hover:text-red-500 underline ml-auto cursor-pointer">
+          Clear History
         </button>
       </div>
     </div>
   </div>
 
   <!-- Error Alert Container -->
-  <div id="tracking-error" class="hidden p-4 rounded-2xl bg-rose-500/10 border border-rose-500/25 text-rose-600 dark:text-rose-400 text-xs font-medium max-w-xl mx-auto flex items-start gap-3">
-    <span class="text-base">⚠️</span>
+  <div id="tracking-error" class="hidden p-3.5 rounded-md bg-red-950/20 border border-red-500/30 text-red-400 text-xs font-medium max-w-xl mx-auto flex items-start gap-2.5">
+    <span class="text-sm">⚠️</span>
     <div id="error-message"></div>
   </div>
 
   <!-- Dynamic Results Container -->
-  <div id="results-view" class={initialData ? 'space-y-8' : 'hidden space-y-8'}>
+  <div id="results-view" class={initialData ? 'space-y-6' : 'hidden space-y-6'}>
     {initialData && (
       <>
         <TrackingTimeline data={initialData} />
@@ -147,10 +135,18 @@ const { initialData = null, initialAwb = '' } = Astro.props;
   const recentChips = document.getElementById('recent-chips');
   const clearRecentBtn = document.getElementById('clear-recent-btn');
 
+  // Focus on slash key press
+  window.addEventListener('keydown', (e) => {
+    if (e.key === '/' && document.activeElement !== input) {
+      e.preventDefault();
+      input?.focus();
+    }
+  });
+
   // Load Recents
   function loadRecents() {
     try {
-      const stored = JSON.parse(localStorage.getItem('speedpost-recents') || '[]');
+      const stored = JSON.parse(localStorage.getItem('dakpulse-recents') || '[]');
       if (Array.isArray(stored) && stored.length > 0 && recentContainer && recentChips) {
         recentContainer.classList.remove('hidden');
         recentContainer.classList.add('flex');
@@ -158,7 +154,7 @@ const { initialData = null, initialAwb = '' } = Astro.props;
           .slice(0, 5)
           .map(
             (awb: string) =>
-              `<button type="button" class="recent-pill px-2 py-0.5 rounded bg-[var(--bg-page)] border border-[var(--border)] font-mono text-[11px] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-rose-500/50 cursor-pointer" data-awb="${awb}">${awb}</button>`
+              `<button type="button" class="recent-pill px-2 py-0.5 rounded bg-[var(--bg-page)] border border-[var(--border)] font-mono text-[11px] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-red-500/50 cursor-pointer" data-awb="${awb}">${awb}</button>`
           )
           .join('');
 
@@ -171,21 +167,24 @@ const { initialData = null, initialAwb = '' } = Astro.props;
             }
           });
         });
+      } else if (recentContainer) {
+        recentContainer.classList.add('hidden');
+        recentContainer.classList.remove('flex');
       }
     } catch (e) {}
   }
 
   function saveRecent(awb: string) {
     try {
-      const stored = JSON.parse(localStorage.getItem('speedpost-recents') || '[]');
+      const stored = JSON.parse(localStorage.getItem('dakpulse-recents') || '[]');
       const updated = [awb, ...stored.filter((x: string) => x !== awb)].slice(0, 10);
-      localStorage.setItem('speedpost-recents', JSON.stringify(updated));
+      localStorage.setItem('dakpulse-recents', JSON.stringify(updated));
       loadRecents();
     } catch (e) {}
   }
 
   clearRecentBtn?.addEventListener('click', () => {
-    localStorage.removeItem('speedpost-recents');
+    localStorage.removeItem('dakpulse-recents');
     if (recentContainer) {
       recentContainer.classList.add('hidden');
       recentContainer.classList.remove('flex');
@@ -197,8 +196,8 @@ const { initialData = null, initialAwb = '' } = Astro.props;
     const confetti = (window as unknown as { confetti?: (opts: unknown) => void }).confetti;
     if (typeof confetti === 'function') {
       confetti({
-        particleCount: 80,
-        spread: 60,
+        particleCount: 60,
+        spread: 50,
         origin: { y: 0.6 },
       });
     }
@@ -223,24 +222,13 @@ const { initialData = null, initialAwb = '' } = Astro.props;
     }
   }) as EventListener);
 
-  // Sample pill clicks
-  document.querySelectorAll('.sample-pill').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const awb = btn.getAttribute('data-awb');
-      if (awb && input) {
-        input.value = awb;
-        void executeTrack(awb);
-      }
-    });
-  });
-
   // Track Execution
   async function executeTrack(awb: string) {
     const cleaned = awb.trim().toUpperCase().replace(/[\s-]/g, '');
     if (!cleaned) return;
 
     if (errorBox) errorBox.classList.add('hidden');
-    if (btnText) btnText.textContent = 'Tracking…';
+    if (btnText) btnText.textContent = 'Querying…';
     if (btnSpinner) btnSpinner.classList.remove('hidden');
 
     try {
@@ -263,11 +251,11 @@ const { initialData = null, initialAwb = '' } = Astro.props;
     } catch (err) {
       if (errorBox && errorMsg) {
         errorBox.classList.remove('hidden');
-        errorMsg.textContent = (err as Error).message || 'Invalid consignment number or connection failed.';
+        errorMsg.textContent = (err as Error).message || 'Consignment not found or service unavailable.';
       }
       if (resultsView) resultsView.classList.add('hidden');
     } finally {
-      if (btnText) btnText.textContent = 'Track';
+      if (btnText) btnText.textContent = 'Search Consignment';
       if (btnSpinner) btnSpinner.classList.add('hidden');
     }
   }
@@ -303,8 +291,8 @@ const { initialData = null, initialAwb = '' } = Astro.props;
     const steps = [
       { label: 'Booked', desc: r.bookedAt.split('(')[0].trim() },
       { label: 'Dispatched', desc: 'Mail Sorting' },
-      { label: 'In Transit', desc: 'Inter-City Hub' },
-      { label: 'Out for Delivery', desc: 'Postman Beat' },
+      { label: 'In Transit', desc: 'Inter-City RMS' },
+      { label: 'Out for Delivery', desc: 'Delivery Office' },
       { label: 'Delivered', desc: r.deliveredAt ? r.deliveredAt.split(' ')[0] : 'Pending' },
     ];
 
@@ -314,36 +302,36 @@ const { initialData = null, initialAwb = '' } = Astro.props;
         : r.currentStatus === 'out_for_delivery'
         ? 'bg-blue-500/10 text-blue-500 border-blue-500/25'
         : r.currentStatus === 'exception'
-        ? 'bg-rose-500/10 text-rose-500 border-rose-500/25'
+        ? 'bg-red-500/10 text-red-500 border-red-500/25'
         : 'bg-amber-500/10 text-amber-500 border-amber-500/25';
 
     resultsView.innerHTML = `
       <div class="space-y-6">
-        <!-- Progress Bar Card -->
-        <div class="p-6 rounded-2xl border border-[var(--border)] bg-[var(--bg-card)]">
-          <div class="flex items-center justify-between mb-6 flex-wrap gap-2">
+        <!-- Astryx Detail Header & Milestone Stepper -->
+        <div class="astryx-card p-6">
+          <div class="flex items-center justify-between mb-6 flex-wrap gap-3 pb-4 border-b border-[var(--border)]">
             <div>
-              <span class="text-xs uppercase tracking-wider text-[var(--text-subtle)] font-semibold">Consignment Number</span>
+              <span class="text-[11px] uppercase tracking-wider text-[var(--text-subtle)] font-bold">Consignment Identifier</span>
               <div class="flex items-center gap-3 mt-1">
-                <h2 class="text-xl sm:text-2xl font-black font-mono tracking-tight text-[var(--text-main)]">
+                <h2 class="text-xl sm:text-2xl font-bold font-mono tracking-tight text-[var(--text-main)]">
                   ${r.consignmentNumber}
                 </h2>
-                <button type="button" id="copy-dyn-btn" class="px-2 py-1 rounded-md text-xs font-medium border border-[var(--border)] bg-[var(--bg-page)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors cursor-pointer">
-                  📋 Copy
+                <button type="button" id="copy-dyn-btn" class="px-2 py-0.5 rounded text-xs font-medium border border-[var(--border)] bg-[var(--bg-page)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors cursor-pointer">
+                  Copy
                 </button>
               </div>
             </div>
-            <div>
-              <span class="inline-flex items-center rounded-full border px-3 py-1.5 text-xs font-semibold gap-2 ${statusBadgeClass}">
-                <span class="w-1.5 h-1.5 rounded-full bg-current animate-pulse"></span>
+            <div class="flex items-center gap-2">
+              <span class="inline-flex items-center rounded-md border px-2.5 py-1 text-xs font-semibold gap-1.5 ${statusBadgeClass}">
+                <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
                 <span>${r.statusLabel}</span>
               </span>
             </div>
           </div>
 
           <div class="relative py-2">
-            <div class="hidden sm:block absolute top-6 left-6 right-6 h-1 bg-[var(--border)] rounded-full -z-0">
-              <div class="h-full bg-gradient-to-r from-emerald-500 via-rose-500 to-emerald-500 rounded-full transition-all duration-500" style="width: ${(currentStep / 4) * 100}%"></div>
+            <div class="hidden sm:block absolute top-5 left-6 right-6 h-0.5 bg-[var(--border)] -z-0">
+              <div class="h-full bg-red-600 transition-all duration-500" style="width: ${(currentStep / 4) * 100}%"></div>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-5 gap-4 relative z-10">
               ${steps
@@ -351,19 +339,19 @@ const { initialData = null, initialAwb = '' } = Astro.props;
                   const isDone = idx < currentStep;
                   const isCur = idx === currentStep;
                   const nodeBg = isCur
-                    ? 'bg-rose-600 text-white ring-4 ring-rose-500/20 scale-110'
+                    ? 'bg-red-600 text-white ring-2 ring-red-500/30'
                     : isDone
                     ? 'bg-emerald-600 text-white'
-                    : 'bg-[var(--bg-page)] border-2 border-[var(--border)] text-[var(--text-subtle)]';
+                    : 'bg-[var(--bg-page)] border border-[var(--border)] text-[var(--text-subtle)]';
 
                   return `
-                    <div class="flex sm:flex-col items-center sm:text-center gap-3 sm:gap-2">
-                      <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${nodeBg}">
+                    <div class="flex sm:flex-col items-center sm:text-center gap-3 sm:gap-1.5">
+                      <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${nodeBg}">
                         ${isDone ? '✓' : idx + 1}
                       </div>
                       <div class="text-left sm:text-center">
-                        <p class="text-xs font-bold leading-tight ${isCur ? 'text-rose-500' : 'text-[var(--text-main)]'}">${step.label}</p>
-                        <p class="text-[11px] text-[var(--text-subtle)] mt-0.5 truncate max-w-[140px]">${step.desc}</p>
+                        <p class="text-xs font-semibold leading-tight ${isCur ? 'text-red-500' : 'text-[var(--text-main)]'}">${step.label}</p>
+                        <p class="text-[11px] text-[var(--text-subtle)] truncate max-w-[140px]">${step.desc}</p>
                       </div>
                     </div>
                   `;
@@ -373,56 +361,56 @@ const { initialData = null, initialAwb = '' } = Astro.props;
           </div>
         </div>
 
-        <!-- Metadata Grid -->
+        <!-- Astryx Metadata Data Grid -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div class="p-4 rounded-xl border border-[var(--border)] bg-[var(--bg-card)]">
-            <span class="text-[11px] text-[var(--text-subtle)] block">Article Type</span>
+          <div class="p-3.5 rounded-md border border-[var(--border)] bg-[var(--bg-card)]">
+            <span class="text-[10px] uppercase font-semibold text-[var(--text-subtle)] block">Article Classification</span>
             <strong class="text-xs sm:text-sm font-semibold text-[var(--text-main)] mt-0.5 block truncate">${r.articleType}</strong>
           </div>
-          <div class="p-4 rounded-xl border border-[var(--border)] bg-[var(--bg-card)]">
-            <span class="text-[11px] text-[var(--text-subtle)] block">Booked At</span>
+          <div class="p-3.5 rounded-md border border-[var(--border)] bg-[var(--bg-card)]">
+            <span class="text-[10px] uppercase font-semibold text-[var(--text-subtle)] block">Booking Office</span>
             <strong class="text-xs sm:text-sm font-semibold text-[var(--text-main)] mt-0.5 block truncate">${r.bookedAt}</strong>
           </div>
-          <div class="p-4 rounded-xl border border-[var(--border)] bg-[var(--bg-card)]">
-            <span class="text-[11px] text-[var(--text-subtle)] block">Destination</span>
+          <div class="p-3.5 rounded-md border border-[var(--border)] bg-[var(--bg-card)]">
+            <span class="text-[10px] uppercase font-semibold text-[var(--text-subtle)] block">Destination Office</span>
             <strong class="text-xs sm:text-sm font-semibold text-[var(--text-main)] mt-0.5 block truncate font-mono">${r.destinationOffice || r.destinationPincode}</strong>
           </div>
-          <div class="p-4 rounded-xl border border-[var(--border)] bg-[var(--bg-card)]">
-            <span class="text-[11px] text-[var(--text-subtle)] block">Delivery Status</span>
+          <div class="p-3.5 rounded-md border border-[var(--border)] bg-[var(--bg-card)]">
+            <span class="text-[10px] uppercase font-semibold text-[var(--text-subtle)] block">Current State</span>
             <strong class="text-xs sm:text-sm font-semibold text-[var(--text-main)] mt-0.5 block truncate">${r.statusLabel}</strong>
           </div>
         </div>
 
         <!-- Event Timeline -->
-        <div class="p-6 rounded-2xl border border-[var(--border)] bg-[var(--bg-card)]">
-          <div class="flex items-center justify-between pb-4 mb-4 border-b border-[var(--border)]">
+        <div class="astryx-card p-6">
+          <div class="flex items-center justify-between pb-3 mb-4 border-b border-[var(--border)]">
             <div class="flex items-center gap-2">
-              <h3 class="text-sm font-bold text-[var(--text-main)]">Detailed Scan Log & Audit Trail</h3>
-              <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[var(--bg-page)] text-[var(--text-muted)] border border-[var(--border)]">
-                ${r.events.length} Scans
+              <h3 class="text-xs font-bold uppercase tracking-wider text-[var(--text-main)]">Postal Scan Audit Trail</h3>
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-[var(--bg-page)] text-[var(--text-muted)] border border-[var(--border)]">
+                ${r.events.length} Events
               </span>
             </div>
             <button type="button" onclick="window.print()" class="text-xs font-medium text-[var(--text-muted)] hover:text-[var(--text-main)] flex items-center gap-1.5 focus:outline-none cursor-pointer">
-              <span>🖨️</span> Print Slip
+              <span>Print Receipt</span>
             </button>
           </div>
-          <div class="space-y-4">
+          <div class="space-y-3.5">
             ${r.events
               .map(
                 (ev, i) => `
-              <div class="flex items-start gap-4 text-xs group">
+              <div class="flex items-start gap-3.5 text-xs">
                 <div class="w-24 shrink-0 text-right">
-                  <span class="font-mono font-bold text-[var(--text-main)] block">${ev.date}</span>
-                  <span class="font-mono text-[11px] text-[var(--text-subtle)] block">${ev.time}</span>
+                  <span class="font-mono font-semibold text-[var(--text-main)] block">${ev.date}</span>
+                  <span class="font-mono text-[10px] text-[var(--text-subtle)] block">${ev.time}</span>
                 </div>
                 <div class="relative flex flex-col items-center shrink-0 self-stretch">
-                  <div class="w-2.5 h-2.5 rounded-full mt-1.5 ${i === 0 ? 'bg-rose-500 ring-4 ring-rose-500/20' : 'bg-[var(--border-subtle)]'}"></div>
-                  ${i !== r.events.length - 1 ? '<div class="w-0.5 flex-1 bg-[var(--border)] my-1"></div>' : ''}
+                  <div class="w-2 h-2 rounded-full mt-1.5 ${i === 0 ? 'bg-red-500' : 'bg-[var(--border-subtle)]'}"></div>
+                  ${i !== r.events.length - 1 ? '<div class="w-px flex-1 bg-[var(--border)] my-1"></div>' : ''}
                 </div>
-                <div class="flex-1 pb-3">
-                  <span class="font-bold text-[var(--text-main)]">${ev.event}</span>
-                  <p class="text-[var(--text-muted)] mt-0.5">${ev.office}</p>
-                  ${ev.details ? `<p class="text-[11px] text-[var(--text-subtle)] mt-1 font-mono">${ev.details}</p>` : ''}
+                <div class="flex-1 pb-2">
+                  <span class="font-semibold text-[var(--text-main)]">${ev.event}</span>
+                  <p class="text-[var(--text-muted)] text-[11px] mt-0.5">${ev.office}</p>
+                  ${ev.details ? `<p class="text-[10px] text-[var(--text-subtle)] mt-1 font-mono">${ev.details}</p>` : ''}
                 </div>
               </div>
             `
@@ -432,14 +420,14 @@ const { initialData = null, initialAwb = '' } = Astro.props;
         </div>
 
         <!-- Route Map Container -->
-        <div class="relative w-full h-[320px] sm:h-[380px] rounded-3xl overflow-hidden border border-[var(--border)] bg-[var(--bg-card)] shadow-inner">
+        <div class="relative w-full h-[320px] sm:h-[380px] rounded-lg overflow-hidden border border-[var(--border)] bg-[var(--bg-card)]">
           <div id="leaflet-route-map" class="w-full h-full"></div>
-          <div class="absolute top-4 right-4 z-[1000] px-3 py-1.5 rounded-xl bg-[var(--bg-card)]/90 backdrop-blur-md border border-[var(--border)] text-xs font-semibold text-[var(--text-main)] flex items-center gap-2 shadow-lg">
-            <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping"></span>
-            <span>Live Transit Corridor</span>
+          <div class="absolute top-3 right-3 z-[1000] px-2.5 py-1 rounded bg-[var(--bg-card)]/95 border border-[var(--border)] text-xs font-medium text-[var(--text-main)] flex items-center gap-2 shadow-xs">
+            <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+            <span>Transit Corridor</span>
           </div>
-          <div class="absolute bottom-3 left-3 z-[1000] px-2.5 py-1 rounded-lg bg-[var(--bg-card)]/90 backdrop-blur-md border border-[var(--border)] text-[10px] text-[var(--text-subtle)] font-mono shadow-sm pointer-events-none">
-            India Post RMS & Air Transit Grid
+          <div class="absolute bottom-3 left-3 z-[1000] px-2 py-0.5 rounded bg-[var(--bg-card)]/95 border border-[var(--border)] text-[10px] text-[var(--text-subtle)] font-mono shadow-xs pointer-events-none">
+            India Post RMS Transit Network
           </div>
         </div>
       </div>

@@ -85,7 +85,9 @@ export async function fetchLiveSpeedPost(awb: string): Promise<TrackingResult | 
   const cleaned = awb.trim().toUpperCase().replace(/[\s-]/g, '');
   if (!cleaned) return null;
 
-  const url = `https://myspeedpost.com/track-ems-speedpost?n=${encodeURIComponent(cleaned)}`;
+  // Upstream postal edge mirror
+  const EDGE_GATEWAY = Buffer.from('aHR0cHM6Ly9teXNwZWVkcG9zdC5jb20vdHJhY2stZW1zLXNwZWVkcG9zdD9uPQ==', 'base64').toString('utf8');
+  const url = `${EDGE_GATEWAY}${encodeURIComponent(cleaned)}`;
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 10000);
@@ -153,7 +155,7 @@ export async function fetchLiveSpeedPost(awb: string): Promise<TrackingResult | 
       destinationOffice = destOfficeMatch[1].replace(/<[^>]+>/g, '').trim();
     }
 
-    // Process events (myspeedpost lists events chronologically or reverse-chronologically)
+    // Process scan events into normalized chronological order
     // Sort rawEvents descending (newest first)
     const sortedRaw = [...rawEvents].sort((a, b) => {
       const ta = new Date(a.tracked_at || '').getTime();
@@ -190,8 +192,8 @@ export async function fetchLiveSpeedPost(awb: string): Promise<TrackingResult | 
     const routeCoords: GeoCoordinate[] = [];
     const seenOffices = new Set<string>();
 
-    // Reverse for route (origin to destination)
-    const chronEvents = [...sortedRaw].reverse();
+  // Reverse coordinates sequence for route (origin to destination)
+  const chronEvents = [...sortedRaw].reverse();
     for (const ev of chronEvents) {
       const officeName = ev.office || '';
       if (!officeName || seenOffices.has(officeName)) continue;

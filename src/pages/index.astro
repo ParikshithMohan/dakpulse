@@ -13,9 +13,10 @@ const initialData = sanitized ? await getTrackingDetails(sanitized) : null;
 <Layout
   title={
     initialData
-      ? `Tracking ${initialData.consignmentNumber} (${initialData.statusLabel}) | MySpeedPost`
-      : 'Speed Post Tracking – Live India Post Tracking | MySpeedPost'
+      ? `${initialData.consignmentNumber} (${initialData.statusLabel}) | DakPulse`
+      : 'DakPulse – Real-Time India Post Logistics & Telemetry Network'
   }
+  description="Real-time India Post consignment tracking, live sorting hub scan telemetry, interactive transit corridor mapping, and postal directory."
 >
   <ConsignmentTracker initialData={initialData} initialAwb={sanitized} />
 </Layout>

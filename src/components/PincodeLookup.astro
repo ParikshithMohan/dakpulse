@@ -2,37 +2,50 @@
 // Postal Pincode Directory Component
 ---
 
-<div class="space-y-8 max-w-4xl mx-auto">
-  <!-- Search Card -->
-  <div class="p-6 sm:p-10 rounded-3xl border border-[var(--border)] bg-gradient-to-b from-[var(--bg-card)] to-[var(--bg-card)]/50 shadow-xl">
-    <div class="text-center max-w-xl mx-auto space-y-3">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
-        <span>📮</span> Official Postal Directory
+<div class="space-y-6 max-w-4xl mx-auto">
+  <!-- Astryx Search Card -->
+  <div class="astryx-card p-6 sm:p-8">
+    <div class="max-w-xl mx-auto space-y-3">
+      <div class="flex items-center gap-2 border-b border-[var(--border)] pb-2.5">
+        <span class="w-2 h-2 rounded-full bg-red-500"></span>
+        <span class="text-xs font-semibold uppercase tracking-wider text-[var(--text-subtle)]">
+          National Postal Index
+        </span>
+        <span class="text-[11px] font-mono text-[var(--text-subtle)] ml-auto">154,000+ Hubs</span>
       </div>
-      <h1 class="text-2xl sm:text-3xl font-black text-[var(--text-main)]">
-        India Post Pincode & Office Search
-      </h1>
-      <p class="text-xs sm:text-sm text-[var(--text-muted)]">
-        Search through over 150,000+ Indian post offices by 6-digit Pincode, city, or branch name.
-      </p>
+
+      <div class="space-y-1 pt-1">
+        <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-[var(--text-main)]">
+          Pincode & Postal Branch Directory
+        </h1>
+        <p class="text-xs text-[var(--text-muted)]">
+          Search Indian post offices by 6-digit Pincode, branch name, or city. Check delivery status and division circles.
+        </p>
+      </div>
 
       <!-- Search Input Form -->
-      <form id="pincode-search-form" class="mt-6 flex flex-col sm:flex-row items-center gap-2">
+      <form id="pincode-search-form" class="mt-4 flex flex-col sm:flex-row items-center gap-2">
         <div class="relative w-full flex-1">
+          <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-subtle)] pointer-events-none">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+
           <input
             id="pincode-input"
             type="text"
             name="query"
-            placeholder="Enter 6-digit pincode or post office name (e.g. 110001, 110019, 560034, Fort)"
+            placeholder="Enter 6-digit PIN or office name (e.g. 110001 or Koramangala)"
             autocomplete="off"
             spellcheck="false"
             required
-            class="w-full h-12 pl-4 pr-10 rounded-2xl border border-[var(--border)] bg-[var(--bg-page)] text-[var(--text-main)] placeholder-[var(--text-subtle)] text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-inner"
+            class="w-full h-11 pl-10 pr-10 rounded-md border border-[var(--border)] bg-[var(--bg-page)] text-[var(--text-main)] placeholder-[var(--text-subtle)] text-xs sm:text-sm font-medium focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all shadow-xs"
           />
           <button
             type="button"
             id="clear-pincode-btn"
-            class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-subtle)] hover:text-[var(--text-main)] text-sm cursor-pointer"
+            class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-subtle)] hover:text-[var(--text-main)] text-xs cursor-pointer"
           >
             ✕
           </button>
@@ -41,39 +54,19 @@
         <button
           type="submit"
           id="pincode-submit-btn"
-          class="w-full sm:w-auto h-12 px-6 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs tracking-wide shadow-md shadow-blue-600/20 transition-all flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+          class="w-full sm:w-auto h-11 px-6 rounded-md bg-red-600 hover:bg-red-500 text-white font-semibold text-xs tracking-wide shadow-xs transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-red-500 cursor-pointer"
         >
-          <span id="pin-btn-text">Search</span>
+          <span id="pin-btn-text">Lookup Directory</span>
           <span id="pin-btn-spinner" class="hidden w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
         </button>
       </form>
-
-      <!-- Quick Samples -->
-      <div class="pt-4 flex flex-wrap items-center justify-center gap-2 text-xs">
-        <span class="text-[var(--text-subtle)]">Try Pincodes:</span>
-        <button type="button" class="pin-sample px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--bg-page)] text-[var(--text-muted)] hover:text-blue-500 hover:border-blue-500/40 text-xs font-mono transition-colors cursor-pointer" data-pin="110001">
-          110001 (Connaught Place)
-        </button>
-        <button type="button" class="pin-sample px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--bg-page)] text-[var(--text-muted)] hover:text-blue-500 hover:border-blue-500/40 text-xs font-mono transition-colors cursor-pointer" data-pin="110019">
-          110019 (Kalkaji)
-        </button>
-        <button type="button" class="pin-sample px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--bg-page)] text-[var(--text-muted)] hover:text-blue-500 hover:border-blue-500/40 text-xs font-mono transition-colors cursor-pointer" data-pin="560034">
-          560034 (Koramangala)
-        </button>
-        <button type="button" class="pin-sample px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--bg-page)] text-[var(--text-muted)] hover:text-blue-500 hover:border-blue-500/40 text-xs font-mono transition-colors cursor-pointer" data-pin="400001">
-          400001 (Mumbai GPO)
-        </button>
-        <button type="button" class="pin-sample px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--bg-page)] text-[var(--text-muted)] hover:text-blue-500 hover:border-blue-500/40 text-xs font-mono transition-colors cursor-pointer" data-pin="700001">
-          700001 (Kolkata)
-        </button>
-      </div>
     </div>
   </div>
 
   <!-- Loading State -->
-  <div id="pincode-loading" class="hidden text-center py-12">
-    <div class="w-8 h-8 border-3 border-blue-500/30 border-t-blue-500 rounded-full animate-spin mx-auto mb-3"></div>
-    <p class="text-xs text-[var(--text-muted)]">Looking up postal directory…</p>
+  <div id="pincode-loading" class="hidden text-center py-10">
+    <div class="w-6 h-6 border-2 border-red-500/30 border-t-red-500 rounded-full animate-spin mx-auto mb-2"></div>
+    <p class="text-xs text-[var(--text-muted)] font-mono">Querying postal directory index…</p>
   </div>
 
   <!-- Results Section -->
@@ -82,20 +75,20 @@
       <h3 class="text-xs font-bold uppercase tracking-wider text-[var(--text-subtle)]">
         Found <span id="results-count" class="text-[var(--text-main)] font-black">0</span> Post Offices
       </h3>
-      <span class="text-[11px] text-[var(--text-subtle)]">Click Pincode button to copy</span>
+      <span class="text-[11px] text-[var(--text-subtle)] font-mono">Click Pincode to Copy</span>
     </div>
 
-    <div id="pincode-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div id="pincode-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
       <!-- Injected dynamically -->
     </div>
   </div>
 
   <!-- Empty State -->
-  <div id="pincode-empty" class="hidden text-center py-12 p-8 rounded-2xl border border-[var(--border)] bg-[var(--bg-card)]">
-    <span class="text-3xl block mb-2">🔍</span>
+  <div id="pincode-empty" class="hidden text-center py-12 p-8 rounded-md border border-[var(--border)] bg-[var(--bg-card)]">
+    <span class="text-2xl block mb-2">🔍</span>
     <h3 class="text-sm font-bold text-[var(--text-main)]">No matching post offices found</h3>
     <p class="text-xs text-[var(--text-muted)] mt-1 max-w-sm mx-auto">
-      Double-check the 6-digit postal code or verify the spelling of the district/office name.
+      Verify the 6-digit postal code or check the spelling of the branch/district name.
     </p>
   </div>
 </div>
@@ -127,17 +120,6 @@
     if (resultsSection) resultsSection.classList.add('hidden');
     if (emptyState) emptyState.classList.add('hidden');
     if (cardsGrid) cardsGrid.innerHTML = '';
-  });
-
-  document.querySelectorAll('.pin-sample').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const pin = btn.getAttribute('data-pin');
-      if (pin && input) {
-        input.value = pin;
-        if (clearBtn) clearBtn.classList.remove('hidden');
-        void executeSearch(pin);
-      }
-    });
   });
 
   form?.addEventListener('submit', (e) => {
@@ -174,36 +156,36 @@
             const isDelivery = (po.deliveryStatus || '').toLowerCase() === 'delivery';
 
             return `
-              <div class="p-5 rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] hover:border-blue-500/30 transition-all shadow-sm space-y-3">
+              <div class="p-4 rounded-md border border-[var(--border)] bg-[var(--bg-card)] hover:border-[var(--text-subtle)] transition-colors space-y-2.5">
                 <div class="flex items-start justify-between gap-3">
                   <div>
-                    <h4 class="font-bold text-sm text-[var(--text-main)]">${po.name}</h4>
+                    <h4 class="font-bold text-xs sm:text-sm text-[var(--text-main)]">${po.name}</h4>
                     <span class="inline-block mt-0.5 text-[10px] uppercase font-semibold text-[var(--text-subtle)]">${po.branchType || 'Post Office'}</span>
                   </div>
-                  <button type="button" class="copy-pin-btn font-mono font-black text-xs px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 hover:scale-105 transition-transform cursor-pointer" data-pin="${po.pincode}" title="Click to copy pincode">
-                    ${po.pincode} 📋
+                  <button type="button" class="copy-pin-btn font-mono font-bold text-xs px-2 py-0.5 rounded bg-[var(--bg-page)] text-[var(--text-main)] border border-[var(--border)] hover:border-red-500/50 transition-colors cursor-pointer" data-pin="${po.pincode}" title="Click to copy pincode">
+                    ${po.pincode}
                   </button>
                 </div>
 
-                <div class="grid grid-cols-2 gap-2 text-xs pt-1 border-t border-[var(--border)]">
+                <div class="grid grid-cols-2 gap-2 text-xs pt-1.5 border-t border-[var(--border)]">
                   <div>
-                    <span class="text-[11px] text-[var(--text-subtle)] block">District</span>
-                    <strong class="text-[var(--text-muted)] font-medium truncate block">${po.district || 'N/A'}</strong>
+                    <span class="text-[10px] uppercase font-semibold text-[var(--text-subtle)] block">District</span>
+                    <strong class="text-[var(--text-muted)] font-medium text-xs truncate block">${po.district || 'N/A'}</strong>
                   </div>
                   <div>
-                    <span class="text-[11px] text-[var(--text-subtle)] block">State</span>
-                    <strong class="text-[var(--text-muted)] font-medium truncate block">${po.state || 'N/A'}</strong>
+                    <span class="text-[10px] uppercase font-semibold text-[var(--text-subtle)] block">State</span>
+                    <strong class="text-[var(--text-muted)] font-medium text-xs truncate block">${po.state || 'N/A'}</strong>
                   </div>
                 </div>
 
                 <div class="flex items-center justify-between pt-1">
                   <span class="text-[11px] text-[var(--text-subtle)] truncate max-w-[180px]">${po.division || po.circle || 'India Post'}</span>
-                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded ${
                     isDelivery
-                      ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20'
-                      : 'bg-zinc-500/10 text-zinc-500 border border-zinc-500/20'
+                      ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20'
+                      : 'bg-zinc-500/10 text-zinc-400 border border-zinc-500/20'
                   }">
-                    ${isDelivery ? '✓ Delivery Office' : 'Non-Delivery'}
+                    ${isDelivery ? 'Delivery Office' : 'Non-Delivery'}
                   </span>
                 </div>
               </div>
@@ -230,7 +212,7 @@
       if (emptyState) emptyState.classList.remove('hidden');
     } finally {
       if (loading) loading.classList.add('hidden');
-      if (btnText) btnText.textContent = 'Search';
+      if (btnText) btnText.textContent = 'Lookup Directory';
       if (btnSpinner) btnSpinner.classList.add('hidden');
     }
   }

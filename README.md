@@ -1,19 +1,21 @@
-# MySpeedPost Pro 📮
+# DakPulse 📮
 
-A high-performance, ad-free India Post Speed Post & Parcel Tracking web application, reverse-engineered and built for modern Indian logistics and e-commerce workflows.
+A high-performance India Post logistics & consignment tracking network engine designed for modern e-commerce dispatchers and supply-chain operations.
 
-## Features
+## Highlights
 
-- **Live India Post Tracking**: Real-time consignment status, sorting hub scan events, booking timestamps, tariff details, and destination routing without manual CAPTCHA friction.
-- **In-Place Dynamic Route Mapping**: Interactive Leaflet corridor map showing origin booking offices, transit mail offices (RMS/NSH), and delivery sub-offices across India with automatic night/light mode tile adaptation.
+- **Real-Time Consignment Telemetry**: Real-time status, RMS/NSH sorting hub scan events, booking timestamps, tariff details, and destination routing without manual CAPTCHA friction.
+- **Astryx Design System**: Clean, restrained aesthetic built using Meta's Astryx design tokens (`@astryxdesign/theme-neutral`), solid surfaces, and precise typography hierarchy.
+- **Dynamic Transit Corridor Mapping**: Interactive Leaflet corridor map displaying origin booking offices, transit mail sorting offices (RMS/NSH), and delivery sub-offices across India with automatic night/light mode tile adaptation.
 - **Multi-Tier Pincode & Branch Directory**: Search over 150,000+ Indian post offices by 6-digit Pincode, branch name, or district with sub-10ms in-memory cache and live government API fallback.
-- **Bulk Consignment Auditing**: Batch input up to 50 tracking numbers simultaneously, instant KPI breakdown (Delivered, In Transit, Out for Delivery, Exceptions), and one-click CSV export.
-- **Barcode & QR Camera Scanner**: Live camera-based optical barcode scanner using `html5-qrcode` with native `<dialog>` light-dismiss modal.
+- **Bulk Dispatch Auditing**: Batch input up to 50 tracking numbers simultaneously with immediate KPI breakdown (Delivered, In Transit, Out for Delivery, Exceptions) and one-click CSV export.
+- **Optical Barcode & QR Scanner**: Live camera-based optical barcode scanner using `html5-qrcode` with native `<dialog>` light-dismiss modal.
 - **Zero Ads & Privacy-First**: 100% telemetry-clean, fast server-side rendering with Astro 5 and Tailwind CSS v4.
 
 ## Tech Stack
 
 - **Framework**: [Astro 5](https://astro.build/) (Server-Side Rendering with `@astrojs/node`)
+- **Design System**: Meta's [Astryx](https://github.com/meta/astryx) (`@astryxdesign/core`, `@astryxdesign/theme-neutral`, `@astryxdesign/cli`)
 - **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
 - **Mapping**: [Leaflet](https://leafletjs.com/) with OpenStreetMap tiles
 - **Scanner**: `html5-qrcode`
@@ -73,7 +75,7 @@ src/
 │   ├── StatusBadge.astro          # Color-coded consignment status badges
 │   └── TrackingTimeline.astro     # Audit trail scan event nodes
 ├── layouts/
-│   └── Layout.astro               # Base HTML skeleton & theme provider
+│   └── Layout.astro               # Base HTML skeleton & Astryx theme provider
 ├── lib/
 │   ├── live-scraper.ts            # Edge tracking extractor & parser
 │   ├── postal-api.ts              # Multi-tier pincode directory client
@@ -88,9 +90,9 @@ src/
 │   ├── index.astro                # Home tracking route
 │   └── pincode-search.astro       # Pincode search route
 └── styles/
-    └── global.css                 # Tailwind CSS v4 themes & variables
+    └── global.css                 # Astryx design tokens & Tailwind CSS v4
 ```
 
 ## License
 
-MIT License. Designed & developed for Indian e-commerce & postal logistics.
+MIT License. Designed & developed for Indian logistics & dispatch intelligence.

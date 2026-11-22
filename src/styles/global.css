@@ -1,69 +1,91 @@
+@import "@astryxdesign/theme-neutral/fonts.css";
+@import "@astryxdesign/theme-neutral/theme.css";
 @import "tailwindcss";
 
 @layer base {
   :root {
-    --bg-page: #09090b;
-    --bg-card: #121215;
-    --bg-card-hover: #18181b;
-    --border: #27272a;
-    --border-subtle: #1f1f23;
-    --text-main: #f4f4f5;
-    --text-muted: #a1a1aa;
-    --text-subtle: #71717a;
-    --accent: #e11d48;
-    --accent-hover: #be123c;
-    --accent-glow: rgba(225, 29, 72, 0.15);
-    --success: #10b981;
-    --success-bg: rgba(16, 185, 129, 0.1);
-    --warning: #f59e0b;
-    --warning-bg: rgba(245, 158, 11, 0.1);
-    --info: #3b82f6;
-    --info-bg: rgba(59, 130, 246, 0.1);
+    --bg-page: #0c0d0e;
+    --bg-card: #141517;
+    --bg-card-hover: #1a1b1e;
+    --border: #26272b;
+    --border-subtle: #1c1d21;
+    --text-main: #f3f4f6;
+    --text-muted: #9ca3af;
+    --text-subtle: #6b7280;
+    --accent: #dc2626;
+    --accent-hover: #b91c1c;
+    --accent-subtle: rgba(220, 38, 38, 0.12);
+    --success: #16a34a;
+    --success-bg: rgba(22, 163, 74, 0.1);
+    --warning: #d97706;
+    --warning-bg: rgba(217, 119, 6, 0.1);
+    --info: #2563eb;
+    --info-bg: rgba(37, 99, 235, 0.1);
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   }
 
-  [data-theme="light"] {
-    --bg-page: #f8fafc;
+  [data-theme="light"], :root:has([data-theme="light"]) {
+    --bg-page: #f9fafb;
     --bg-card: #ffffff;
-    --bg-card-hover: #f1f5f9;
-    --border: #e2e8f0;
-    --border-subtle: #cbd5e1;
-    --text-main: #0f172a;
-    --text-muted: #475569;
-    --text-subtle: #64748b;
-    --accent: #e11d48;
-    --accent-hover: #be123c;
-    --accent-glow: rgba(225, 29, 72, 0.12);
-    --success: #059669;
-    --success-bg: #ecfdf5;
-    --warning: #d97706;
+    --bg-card-hover: #f3f4f6;
+    --border: #e5e7eb;
+    --border-subtle: #d1d5db;
+    --text-main: #111827;
+    --text-muted: #4b5563;
+    --text-subtle: #6b7280;
+    --accent: #dc2626;
+    --accent-hover: #b91c1c;
+    --accent-subtle: rgba(220, 38, 38, 0.08);
+    --success: #15803d;
+    --success-bg: #f0fdf4;
+    --warning: #b45309;
     --warning-bg: #fffbeb;
-    --info: #2563eb;
+    --info: #1d4ed8;
     --info-bg: #eff6ff;
   }
 
   body {
     background-color: var(--bg-page);
     color: var(--text-main);
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: var(--font-family-body, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-family-heading, var(--font-family-body, inherit));
+    letter-spacing: -0.02em;
+  }
 }
 
-/* Modern Accessible Dialog with Transitions */
+/* Astryx Precision Container Style */
+.astryx-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.astryx-panel {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+}
+
+/* Accessible Native Dialog with Transitions */
 dialog.native-modal {
   background: var(--bg-card);
   color: var(--text-main);
   border: 1px solid var(--border);
-  border-radius: 1rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  border-radius: 0.75rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
   max-width: min(90vw, 32rem);
   width: 100%;
   padding: 0;
   margin: auto;
   opacity: 0;
-  transform: scale(0.95) translateY(10px);
-  transition: opacity 0.2s ease-out, transform 0.2s ease-out, display 0.2s allow-discrete, overlay 0.2s allow-discrete;
+  transform: scale(0.98) translateY(8px);
+  transition: opacity 0.15s ease-out, transform 0.15s ease-out, display 0.15s allow-discrete, overlay 0.15s allow-discrete;
 }
 
 dialog:modal {
@@ -83,15 +105,15 @@ dialog.native-modal[open] {
 @starting-style {
   dialog.native-modal[open] {
     opacity: 0;
-    transform: scale(0.95) translateY(10px);
+    transform: scale(0.98) translateY(8px);
   }
 }
 
 dialog.native-modal::backdrop {
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(2px);
   opacity: 0;
-  transition: opacity 0.2s ease-out, display 0.2s allow-discrete, overlay 0.2s allow-discrete;
+  transition: opacity 0.15s ease-out, display 0.15s allow-discrete, overlay 0.15s allow-discrete;
 }
 
 dialog.native-modal[open]::backdrop {
@@ -108,36 +130,36 @@ dialog.native-modal[open]::backdrop {
 .leaflet-container {
   width: 100%;
   height: 100%;
-  background: #18181b;
+  background: #141517;
   font-family: inherit;
   z-index: 1;
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
 }
 
 [data-theme="light"] .leaflet-container {
-  background: #f1f5f9;
+  background: #f3f4f6;
 }
 
 /* Custom Pulse Marker */
 .pulse-marker {
   position: relative;
-  width: 16px;
-  height: 16px;
-  background: #e11d48;
+  width: 14px;
+  height: 14px;
+  background: #dc2626;
   border: 2px solid #ffffff;
   border-radius: 50%;
-  box-shadow: 0 0 10px rgba(225, 29, 72, 0.8);
+  box-shadow: 0 0 8px rgba(220, 38, 38, 0.7);
 }
 
 .pulse-marker::after {
   content: '';
   position: absolute;
-  top: -6px;
-  left: -6px;
-  width: 24px;
-  height: 24px;
+  top: -5px;
+  left: -5px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  border: 2px solid #e11d48;
+  border: 2px solid #dc2626;
   animation: pulse-ring 1.8s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
 }
 
