@@ -1,0 +1,13 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PostageCalculator from '../components/PostageCalculator.astro';
+
+export const prerender = false;
+---
+
+<Layout
+  title="India Post Postage & Delivery Rate Calculator | DakPulse"
+  description="Instant domestic postage and tariff calculator for Speed Post, Registered Post, Business Parcel, and Ordinary Post across India. Transparent GST breakdown and delivery time estimates."
+>
+  <PostageCalculator />
+</Layout>

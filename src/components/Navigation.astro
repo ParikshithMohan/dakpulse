@@ -5,20 +5,17 @@ const currentPath = Astro.url.pathname;
 <header class="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--bg-card)]/90 backdrop-blur-md transition-colors">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-15 flex items-center justify-between">
     <!-- Brand Logo -->
-    <a href="/" class="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 rounded-lg py-1">
-      <div class="w-9 h-9 rounded-lg bg-red-600 flex items-center justify-center text-white shadow-sm group-hover:bg-red-500 transition-colors">
-        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <a href="/" class="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 rounded-lg py-1">
+      <div class="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center text-white shadow-xs group-hover:bg-red-500 transition-colors">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9"></path>
           <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
           <path d="m16 19 2 2 4-4"></path>
         </svg>
       </div>
       <div>
-        <div class="flex items-center gap-2">
-          <span class="font-bold text-sm tracking-tight text-[var(--text-main)]">DakPulse</span>
-          <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-zinc-800 text-zinc-300 dark:bg-zinc-800 dark:text-zinc-300 border border-[var(--border)]">v3.0</span>
-        </div>
-        <p class="text-[11px] text-[var(--text-subtle)] font-medium leading-none mt-0.5">India Post Logistics Network</p>
+        <span class="font-heading font-bold text-base tracking-tight text-[var(--text-main)]">DakPulse</span>
+        <span class="text-[10px] uppercase font-bold text-red-500 ml-1">Beta</span>
       </div>
     </a>
 
@@ -26,7 +23,7 @@ const currentPath = Astro.url.pathname;
     <nav class="hidden md:flex items-center gap-1 bg-[var(--bg-page)] p-1 rounded-lg border border-[var(--border)]" aria-label="Main Navigation">
       <a
         href="/"
-        class={`px-3.5 py-1.5 rounded-md text-xs font-medium transition-all ${
+        class={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
           currentPath === '/'
             ? 'bg-[var(--bg-card)] text-[var(--text-main)] shadow-xs font-semibold'
             : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
@@ -35,18 +32,18 @@ const currentPath = Astro.url.pathname;
         Track Consignment
       </a>
       <a
-        href="/bulk-tracking"
-        class={`px-3.5 py-1.5 rounded-md text-xs font-medium transition-all ${
-          currentPath.startsWith('/bulk-tracking')
+        href="/postage-calculator"
+        class={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+          currentPath.startsWith('/postage-calculator')
             ? 'bg-[var(--bg-card)] text-[var(--text-main)] shadow-xs font-semibold'
             : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
         }`}
       >
-        Bulk Dispatch
+        Postage Calculator
       </a>
       <a
         href="/pincode-search"
-        class={`px-3.5 py-1.5 rounded-md text-xs font-medium transition-all ${
+        class={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
           currentPath.startsWith('/pincode-search')
             ? 'bg-[var(--bg-card)] text-[var(--text-main)] shadow-xs font-semibold'
             : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
@@ -54,14 +51,24 @@ const currentPath = Astro.url.pathname;
       >
         Pincode Directory
       </a>
+      <a
+        href="/bulk-tracking"
+        class={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+          currentPath.startsWith('/bulk-tracking')
+            ? 'bg-[var(--bg-card)] text-[var(--text-main)] shadow-xs font-semibold'
+            : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
+        }`}
+      >
+        Bulk Dispatch
+      </a>
     </nav>
 
     <!-- Controls & Actions -->
-    <div class="flex items-center gap-3">
-      <!-- Network Active Status -->
-      <span class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono text-[var(--text-muted)] bg-[var(--bg-page)] border border-[var(--border)]">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-        Edge Connected
+    <div class="flex items-center gap-2.5">
+      <!-- Zero Ads Pill (User preferred message) -->
+      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+        Zero Ads • 100% Free
       </span>
 
       <!-- Theme Switcher -->
@@ -72,11 +79,9 @@ const currentPath = Astro.url.pathname;
         title="Toggle dark/light mode"
         aria-label="Toggle theme"
       >
-        <!-- Sun icon visible in dark mode -->
         <svg id="sun-icon" class="w-4 h-4 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
         </svg>
-        <!-- Moon icon visible in light mode -->
         <svg id="moon-icon" class="w-4 h-4 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
         </svg>
@@ -88,27 +93,35 @@ const currentPath = Astro.url.pathname;
   <div class="md:hidden border-t border-[var(--border)] px-4 py-2 flex items-center justify-around bg-[var(--bg-card)]">
     <a
       href="/"
-      class={`text-xs font-semibold py-1.5 px-3 rounded-md ${
+      class={`text-xs font-semibold py-1 px-2 rounded-md ${
         currentPath === '/' ? 'bg-red-500/10 text-red-500' : 'text-[var(--text-muted)]'
       }`}
     >
       Track
     </a>
     <a
-      href="/bulk-tracking"
-      class={`text-xs font-semibold py-1.5 px-3 rounded-md ${
-        currentPath.startsWith('/bulk-tracking') ? 'bg-red-500/10 text-red-500' : 'text-[var(--text-muted)]'
+      href="/postage-calculator"
+      class={`text-xs font-semibold py-1 px-2 rounded-md ${
+        currentPath.startsWith('/postage-calculator') ? 'bg-red-500/10 text-red-500' : 'text-[var(--text-muted)]'
       }`}
     >
-      Bulk Dispatch
+      Rates
     </a>
     <a
       href="/pincode-search"
-      class={`text-xs font-semibold py-1.5 px-3 rounded-md ${
+      class={`text-xs font-semibold py-1 px-2 rounded-md ${
         currentPath.startsWith('/pincode-search') ? 'bg-red-500/10 text-red-500' : 'text-[var(--text-muted)]'
       }`}
     >
       Pincodes
+    </a>
+    <a
+      href="/bulk-tracking"
+      class={`text-xs font-semibold py-1 px-2 rounded-md ${
+        currentPath.startsWith('/bulk-tracking') ? 'bg-red-500/10 text-red-500' : 'text-[var(--text-muted)]'
+      }`}
+    >
+      Bulk
     </a>
   </div>
 </header>
@@ -120,5 +133,6 @@ const currentPath = Astro.url.pathname;
     const nextTheme = isDark ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', nextTheme);
     localStorage.setItem('dakpulse-theme', nextTheme);
+    window.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme: nextTheme } }));
   });
 </script>

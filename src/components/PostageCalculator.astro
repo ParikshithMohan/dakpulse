@@ -1,0 +1,407 @@
+---
+import { calculatePostage, DISTANCE_SLAB_LABELS, type DistanceSlab } from '../lib/postage-engine';
+
+const initialWeight = 250;
+const initialSlab: DistanceSlab = '201_to_1000';
+const initialCalculation = calculatePostage({
+  weightGrams: initialWeight,
+  distanceSlab: initialSlab,
+});
+---
+
+<div class="space-y-8">
+  <!-- Precision Rate Calculator Header Card -->
+  <div class="astryx-card p-6 sm:p-8">
+    <div class="max-w-3xl space-y-4">
+      <div class="flex items-center justify-between border-b border-[var(--border)] pb-3">
+        <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--text-subtle)]">
+          <span class="w-2 h-2 rounded-full bg-red-500"></span>
+          <span>India Post Tariff & Delivery Calculator</span>
+        </div>
+        <div class="text-[11px] font-mono text-[var(--text-subtle)]">
+          Updated 2026 Postal Slabs • Includes 18% GST
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-[var(--text-main)]">
+          India Post Postage & Delivery Calculator
+        </h1>
+        <p class="text-xs text-[var(--text-muted)]">
+          Instant tariff estimation for Speed Post, Registered Post, Business Parcel, and Ordinary Mail across Indian postal slabs.
+        </p>
+      </div>
+
+      <!-- Controls Form -->
+      <div class="mt-6 space-y-6">
+        <!-- Weight Input Section -->
+        <div class="space-y-3 p-4 rounded-lg bg-[var(--bg-page)] border border-[var(--border)]">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <label for="weight-slider" class="text-xs font-bold uppercase tracking-wider text-[var(--text-main)]">
+              Consignment Weight: <span id="weight-display" class="font-mono text-red-500 text-sm ml-1">250g</span>
+            </label>
+            <div class="flex items-center gap-1.5">
+              <input
+                id="weight-number-input"
+                type="number"
+                min="10"
+                max="20000"
+                step="10"
+                value="250"
+                class="w-24 h-8 px-2 rounded border border-[var(--border)] bg-[var(--bg-card)] text-[var(--text-main)] text-xs font-mono font-bold text-right focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500"
+              />
+              <span class="text-xs font-mono text-[var(--text-subtle)]">grams</span>
+            </div>
+          </div>
+
+          <!-- Slider -->
+          <input
+            id="weight-slider"
+            type="range"
+            min="10"
+            max="10000"
+            step="10"
+            value="250"
+            class="w-full accent-red-600 cursor-pointer h-2 bg-[var(--border)] rounded-lg"
+          />
+
+          <!-- Quick Presets -->
+          <div class="flex flex-wrap items-center gap-1.5 pt-1">
+            <span class="text-[11px] text-[var(--text-subtle)] mr-1">Presets:</span>
+            <button type="button" class="preset-chip px-2 py-0.5 rounded text-[11px] font-mono border border-[var(--border)] bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-red-500/50 cursor-pointer" data-weight="20">20g (Letter)</button>
+            <button type="button" class="preset-chip px-2 py-0.5 rounded text-[11px] font-mono border border-[var(--border)] bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-red-500/50 cursor-pointer" data-weight="50">50g (Doc)</button>
+            <button type="button" class="preset-chip px-2 py-0.5 rounded text-[11px] font-mono border border-[var(--border)] bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-red-500/50 cursor-pointer" data-weight="100">100g</button>
+            <button type="button" class="preset-chip px-2 py-0.5 rounded text-[11px] font-mono border border-red-500/40 bg-red-500/10 text-red-400 cursor-pointer" data-weight="250">250g (Standard)</button>
+            <button type="button" class="preset-chip px-2 py-0.5 rounded text-[11px] font-mono border border-[var(--border)] bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-red-500/50 cursor-pointer" data-weight="500">500g (Parcel)</button>
+            <button type="button" class="preset-chip px-2 py-0.5 rounded text-[11px] font-mono border border-[var(--border)] bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-red-500/50 cursor-pointer" data-weight="1000">1 kg</button>
+            <button type="button" class="preset-chip px-2 py-0.5 rounded text-[11px] font-mono border border-[var(--border)] bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-red-500/50 cursor-pointer" data-weight="2000">2 kg</button>
+            <button type="button" class="preset-chip px-2 py-0.5 rounded text-[11px] font-mono border border-[var(--border)] bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-red-500/50 cursor-pointer" data-weight="5000">5 kg</button>
+          </div>
+        </div>
+
+        <!-- Pincode Route & Distance Slab Selector -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="origin-pincode" class="block text-[11px] font-bold text-[var(--text-subtle)] uppercase tracking-wider mb-1.5">
+              Origin Pincode (Booking Office)
+            </label>
+            <input
+              id="origin-pincode"
+              type="text"
+              maxlength="6"
+              placeholder="e.g. 560001 (Bengaluru)"
+              class="w-full h-10 px-3 rounded-md border border-[var(--border)] bg-[var(--bg-page)] text-[var(--text-main)] text-xs font-mono font-semibold uppercase tracking-wider focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 shadow-xs"
+            />
+          </div>
+
+          <div>
+            <label for="dest-pincode" class="block text-[11px] font-bold text-[var(--text-subtle)] uppercase tracking-wider mb-1.5">
+              Destination Pincode (Delivery Office)
+            </label>
+            <input
+              id="dest-pincode"
+              type="text"
+              maxlength="6"
+              placeholder="e.g. 110001 (New Delhi)"
+              class="w-full h-10 px-3 rounded-md border border-[var(--border)] bg-[var(--bg-page)] text-[var(--text-main)] text-xs font-mono font-semibold uppercase tracking-wider focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 shadow-xs"
+            />
+          </div>
+        </div>
+
+        <!-- Distance Slab Selector (Automatic or Manual Override) -->
+        <div>
+          <label for="distance-slab-select" class="block text-[11px] font-bold text-[var(--text-subtle)] uppercase tracking-wider mb-1.5">
+            Distance Slab Category <span id="auto-detected-badge" class="hidden text-[10px] text-emerald-400 font-normal lowercase">(auto-detected from pincodes)</span>
+          </label>
+          <select
+            id="distance-slab-select"
+            class="w-full h-10 px-3 rounded-md border border-[var(--border)] bg-[var(--bg-page)] text-[var(--text-main)] text-xs font-medium focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 shadow-xs cursor-pointer"
+          >
+            <option value="local">Local (Within municipal / city limits)</option>
+            <option value="up_to_200">Up to 200 km (Intra-State / Neighboring District)</option>
+            <option value="201_to_1000" selected>201 km to 1,000 km (Regional Transit)</option>
+            <option value="1001_to_2000">1,001 km to 2,000 km (Inter-State / Metro Corridor)</option>
+            <option value="above_2000">Above 2,000 km (Cross-Country / North-East / Islands)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comparison Results Grid -->
+  <div>
+    <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+      <h2 class="font-heading text-base font-bold text-[var(--text-main)]">
+        Tariff Comparison by Service
+      </h2>
+      <span id="rate-summary-info" class="text-xs font-mono text-[var(--text-muted)]">
+        Weight: 250g • Slab: 201-1000 km
+      </span>
+    </div>
+
+    <!-- Cards Grid -->
+    <div id="service-options-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {initialCalculation.options.map((opt) => (
+        <div class={`p-5 rounded-lg border bg-[var(--bg-card)] flex flex-col justify-between transition-all ${opt.isRecommended ? 'border-red-500/60 ring-1 ring-red-500/30' : 'border-[var(--border)]'}`}>
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="font-bold text-sm text-[var(--text-main)]">{opt.serviceName}</span>
+              {opt.isRecommended && (
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-600 text-white uppercase tracking-wider">
+                  Recommended
+                </span>
+              )}
+            </div>
+
+            <div class="mb-3">
+              <div class="flex items-baseline gap-1">
+                <span class="text-2xl font-bold font-mono text-[var(--text-main)]">₹{opt.totalTariff}</span>
+                <span class="text-[11px] text-[var(--text-subtle)]">incl. GST</span>
+              </div>
+              <p class="text-[11px] text-[var(--text-muted)] font-mono mt-0.5">
+                Base ₹{opt.baseTariff} + GST (18%) ₹{opt.gst}
+              </p>
+            </div>
+
+            <div class="p-2 rounded bg-[var(--bg-page)] border border-[var(--border)] text-xs mb-4">
+              <span class="text-[10px] font-semibold uppercase text-[var(--text-subtle)] block">Transit SLA</span>
+              <strong class="text-[var(--text-main)] font-semibold">{opt.estimatedDays}</strong>
+            </div>
+
+            <ul class="space-y-1.5 text-xs text-[var(--text-muted)] mb-4">
+              {opt.features.map((feat) => (
+                <li class="flex items-start gap-1.5">
+                  <span class="text-emerald-500 font-bold">✓</span>
+                  <span>{feat}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div class="pt-3 border-t border-[var(--border)]">
+            <span class="text-[10px] font-mono text-[var(--text-subtle)] block">
+              Max Weight: {opt.maxWeightAllowed / 1000} kg
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Detailed Tariff Slabs Reference Table -->
+  <div class="astryx-card p-6">
+    <div class="flex items-center justify-between border-b border-[var(--border)] pb-3 mb-4">
+      <h3 class="font-heading text-sm font-bold text-[var(--text-main)] uppercase tracking-wider">
+        Official Speed Post Weight Slabs
+      </h3>
+      <span class="text-xs font-mono text-[var(--text-subtle)]">India Post Domestic Rules</span>
+    </div>
+
+    <div class="overflow-x-auto text-xs">
+      <table class="w-full text-left">
+        <thead>
+          <tr class="border-b border-[var(--border)] text-[var(--text-subtle)] font-mono">
+            <th class="py-2 pr-4 font-semibold">Weight Slab</th>
+            <th class="py-2 px-3 font-semibold">Local (&lt; 50km)</th>
+            <th class="py-2 px-3 font-semibold">Up to 200km</th>
+            <th class="py-2 px-3 font-semibold">201 - 1,000km</th>
+            <th class="py-2 px-3 font-semibold">1,001 - 2,000km</th>
+            <th class="py-2 pl-3 font-semibold">Above 2,000km</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[var(--border)] font-mono text-[var(--text-muted)]">
+          <tr>
+            <td class="py-2 pr-4 font-semibold text-[var(--text-main)]">Up to 50 grams</td>
+            <td class="py-2 px-3">₹15</td>
+            <td class="py-2 px-3">₹35</td>
+            <td class="py-2 px-3">₹35</td>
+            <td class="py-2 px-3">₹35</td>
+            <td class="py-2 pl-3">₹35</td>
+          </tr>
+          <tr>
+            <td class="py-2 pr-4 font-semibold text-[var(--text-main)]">51g to 200 grams</td>
+            <td class="py-2 px-3">₹25</td>
+            <td class="py-2 px-3">₹35</td>
+            <td class="py-2 px-3">₹40</td>
+            <td class="py-2 px-3">₹60</td>
+            <td class="py-2 pl-3">₹70</td>
+          </tr>
+          <tr>
+            <td class="py-2 pr-4 font-semibold text-[var(--text-main)]">201g to 500 grams</td>
+            <td class="py-2 px-3">₹30</td>
+            <td class="py-2 px-3">₹50</td>
+            <td class="py-2 px-3">₹60</td>
+            <td class="py-2 px-3">₹80</td>
+            <td class="py-2 pl-3">₹90</td>
+          </tr>
+          <tr>
+            <td class="py-2 pr-4 font-semibold text-[var(--text-main)]">Addl. 500g or fraction</td>
+            <td class="py-2 px-3">+₹10</td>
+            <td class="py-2 px-3">+₹15</td>
+            <td class="py-2 px-3">+₹30</td>
+            <td class="py-2 px-3">+₹40</td>
+            <td class="py-2 pl-3">+₹50</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="text-[11px] text-[var(--text-subtle)] mt-3">
+        * Note: All Speed Post tariffs are subject to 18% Goods and Services Tax (GST).
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { calculatePostage, estimateDistanceSlabFromPincodes, type DistanceSlab } from '../lib/postage-engine';
+
+  const slider = document.getElementById('weight-slider') as HTMLInputElement | null;
+  const numberInput = document.getElementById('weight-number-input') as HTMLInputElement | null;
+  const weightDisplay = document.getElementById('weight-display');
+  const slabSelect = document.getElementById('distance-slab-select') as HTMLSelectElement | null;
+  const originInput = document.getElementById('origin-pincode') as HTMLInputElement | null;
+  const destInput = document.getElementById('dest-pincode') as HTMLInputElement | null;
+  const autoBadge = document.getElementById('auto-detected-badge');
+  const container = document.getElementById('service-options-container');
+  const summaryInfo = document.getElementById('rate-summary-info');
+  const presetChips = document.querySelectorAll('.preset-chip');
+
+  function updateCalculation() {
+    if (!slider || !container) return;
+
+    const weightGrams = parseInt(slider.value, 10) || 250;
+    const origin = originInput?.value.trim() || '';
+    const dest = destInput?.value.trim() || '';
+
+    let slab = (slabSelect?.value as DistanceSlab) || '201_to_1000';
+
+    if (origin.length === 6 && dest.length === 6) {
+      const estimated = estimateDistanceSlabFromPincodes(origin, dest);
+      slab = estimated.slab;
+      if (slabSelect) slabSelect.value = slab;
+      if (autoBadge) autoBadge.classList.remove('hidden');
+    } else {
+      if (autoBadge) autoBadge.classList.add('hidden');
+    }
+
+    if (weightDisplay) {
+      weightDisplay.textContent = weightGrams >= 1000 ? `${(weightGrams / 1000).toFixed(1)} kg (${weightGrams}g)` : `${weightGrams}g`;
+    }
+    if (numberInput) {
+      numberInput.value = String(weightGrams);
+    }
+    if (summaryInfo) {
+      summaryInfo.textContent = `Weight: ${weightGrams}g • Slab: ${slab.replace(/_/g, ' ')}`;
+    }
+
+    const result = calculatePostage({
+      weightGrams,
+      distanceSlab: slab,
+      originPincode: origin,
+      destinationPincode: dest,
+    });
+
+    // Render cards
+    container.innerHTML = result.options
+      .map((opt) => {
+        if (!opt.isEligible) {
+          return `
+            <div class="p-5 rounded-lg border border-[var(--border)] bg-[var(--bg-card)]/60 opacity-60 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-2 mb-2">
+                  <span class="font-bold text-sm text-[var(--text-muted)]">${opt.serviceName}</span>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-zinc-800 text-zinc-400">Ineligible</span>
+                </div>
+                <p class="text-xs text-red-400 my-3">${opt.ineligibilityReason || 'Exceeds weight limit'}</p>
+              </div>
+              <div class="pt-3 border-t border-[var(--border)]">
+                <span class="text-[10px] font-mono text-[var(--text-subtle)] block">Max Allowed: ${opt.maxWeightAllowed / 1000} kg</span>
+              </div>
+            </div>
+          `;
+        }
+
+        return `
+          <div class="p-5 rounded-lg border bg-[var(--bg-card)] flex flex-col justify-between transition-all ${
+            opt.isRecommended ? 'border-red-500/60 ring-1 ring-red-500/30' : 'border-[var(--border)]'
+          }">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <span class="font-bold text-sm text-[var(--text-main)]">${opt.serviceName}</span>
+                ${
+                  opt.isRecommended
+                    ? '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-600 text-white uppercase tracking-wider">Recommended</span>'
+                    : ''
+                }
+              </div>
+
+              <div class="mb-3">
+                <div class="flex items-baseline gap-1">
+                  <span class="text-2xl font-bold font-mono text-[var(--text-main)]">₹${opt.totalTariff}</span>
+                  <span class="text-[11px] text-[var(--text-subtle)]">incl. GST</span>
+                </div>
+                <p class="text-[11px] text-[var(--text-muted)] font-mono mt-0.5">
+                  Base ₹${opt.baseTariff} + GST (18%) ₹${opt.gst}
+                </p>
+              </div>
+
+              <div class="p-2 rounded bg-[var(--bg-page)] border border-[var(--border)] text-xs mb-4">
+                <span class="text-[10px] font-semibold uppercase text-[var(--text-subtle)] block">Transit SLA</span>
+                <strong class="text-[var(--text-main)] font-semibold">${opt.estimatedDays}</strong>
+              </div>
+
+              <ul class="space-y-1.5 text-xs text-[var(--text-muted)] mb-4">
+                ${opt.features.map((feat) => `<li class="flex items-start gap-1.5"><span class="text-emerald-500 font-bold">✓</span><span>${feat}</span></li>`).join('')}
+              </ul>
+            </div>
+
+            <div class="pt-3 border-t border-[var(--border)]">
+              <span class="text-[10px] font-mono text-[var(--text-subtle)] block">
+                Max Weight: ${opt.maxWeightAllowed / 1000} kg
+              </span>
+            </div>
+          </div>
+        `;
+      })
+      .join('');
+  }
+
+  // Events
+  slider?.addEventListener('input', () => {
+    updateCalculation();
+  });
+
+  numberInput?.addEventListener('input', () => {
+    if (slider && numberInput) {
+      slider.value = numberInput.value;
+      updateCalculation();
+    }
+  });
+
+  slabSelect?.addEventListener('change', () => {
+    updateCalculation();
+  });
+
+  originInput?.addEventListener('input', () => {
+    updateCalculation();
+  });
+
+  destInput?.addEventListener('input', () => {
+    updateCalculation();
+  });
+
+  presetChips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const weight = chip.getAttribute('data-weight');
+      if (weight && slider) {
+        slider.value = weight;
+        presetChips.forEach((c) => {
+          c.classList.remove('border-red-500/40', 'bg-red-500/10', 'text-red-400');
+          c.classList.add('border-[var(--border)]', 'bg-[var(--bg-card)]', 'text-[var(--text-muted)]');
+        });
+        chip.classList.add('border-red-500/40', 'bg-red-500/10', 'text-red-400');
+        chip.classList.remove('border-[var(--border)]', 'bg-[var(--bg-card)]', 'text-[var(--text-muted)]');
+        updateCalculation();
+      }
+    });
+  });
+</script>

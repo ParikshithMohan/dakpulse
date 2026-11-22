@@ -8,119 +8,142 @@ interface Props {
 const { route } = Astro.props;
 ---
 
-<div class="relative w-full h-[320px] sm:h-[380px] rounded-lg overflow-hidden border border-[var(--border)] bg-[var(--bg-card)]">
-  <div id="leaflet-route-map" class="w-full h-full"></div>
+<div class="relative w-full h-[340px] sm:h-[400px] rounded-lg overflow-hidden border border-[var(--border)] bg-[var(--bg-card)]">
+  <div id="leaflet-route-map" class="w-full h-full min-h-[340px]" style="min-height: 340px; height: 100%;"></div>
   
   <!-- Overlay Corridor Badge -->
-  <div class="absolute top-3 right-3 z-[1000] px-2.5 py-1 rounded bg-[var(--bg-card)]/95 border border-[var(--border)] text-xs font-medium text-[var(--text-main)] flex items-center gap-2 shadow-xs">
+  <div class="absolute top-3 right-3 z-[1000] px-2.5 py-1 rounded bg-[var(--bg-card)]/95 border border-[var(--border)] text-xs font-medium text-[var(--text-main)] flex items-center gap-2 shadow-xs backdrop-blur-xs">
     <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-    <span>Transit Corridor</span>
+    <span class="font-heading font-semibold text-[11px] uppercase tracking-wider">Delivery Route Corridor</span>
   </div>
 
-  <div class="absolute bottom-3 left-3 z-[1000] px-2 py-0.5 rounded bg-[var(--bg-card)]/95 border border-[var(--border)] text-[10px] text-[var(--text-subtle)] font-mono shadow-xs pointer-events-none">
-    India Post Transit Grid
+  <div class="absolute bottom-3 left-3 z-[1000] px-2 py-0.5 rounded bg-[var(--bg-card)]/95 border border-[var(--border)] text-[10px] text-[var(--text-subtle)] font-mono shadow-xs pointer-events-none backdrop-blur-xs">
+    Transit Routing Network
   </div>
 </div>
 
-<style is:global>
-  /* Dark Mode Map Inversion for clean night theme */
-  [data-theme="dark"] .leaflet-tile-pane {
-    filter: brightness(0.7) invert(1) contrast(1.8) hue-rotate(200deg) saturate(0.3);
-  }
-</style>
-
 <script define:vars={{ initialRoute: route }}>
-  function loadMap() {
-    if (typeof window === 'undefined' || !window.L) {
-      setTimeout(loadMap, 100);
-      return;
-    }
-
-    const L = window.L;
+  function renderMapInstance(coords) {
+    if (typeof window === 'undefined' || !window.L) return;
     const container = document.getElementById('leaflet-route-map');
     if (!container) return;
 
     if (window.__LEAFLET_MAP_INSTANCE__) {
-      window.__LEAFLET_MAP_INSTANCE__.remove();
-      delete container._leaflet_id;
+      try {
+        window.__LEAFLET_MAP_INSTANCE__.remove();
+      } catch (e) {}
+      window.__LEAFLET_MAP_INSTANCE__ = null;
     }
+    delete container._leaflet_id;
 
-    const coords = (window.__CURRENT_ROUTE__ || initialRoute || []);
+    const L = window.L;
     if (!coords || coords.length === 0) return;
 
-    // Standard OpenStreetMap tiles
-    const tileUrl = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
-
-    const map = L.map('leaflet-route-map', {
+    const map = L.map(container, {
       zoomControl: true,
       attributionControl: false,
       scrollWheelZoom: false,
     });
 
-    L.tileLayer(tileUrl, {
+    // Reliable OpenStreetMap tiles without any API key requirements
+    const tileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
+      subdomains: 'abc',
     }).addTo(map);
+
+    window.__LEAFLET_TILE_LAYER__ = tileLayer;
 
     const latlngs = coords.map((c) => [c.lat, c.lng]);
-    const bounds = L.latLngBounds(latlngs);
 
-    // Draw route line
-    L.polyline(latlngs, {
-      color: '#dc2626',
-      weight: 3,
-      opacity: 0.9,
-      dashArray: '6, 6',
-      lineCap: 'round',
-    }).addTo(map);
+    // If 2 or more coordinates, draw polyline route
+    if (latlngs.length >= 2) {
+      L.polyline(latlngs, {
+        color: '#dc2626',
+        weight: 3.5,
+        opacity: 0.9,
+        dashArray: '6, 6',
+        lineCap: 'round',
+      }).addTo(map);
 
-    // Add markers
+      const bounds = L.latLngBounds(latlngs);
+      map.fitBounds(bounds, { padding: [45, 45], maxZoom: 14 });
+    } else if (latlngs.length === 1) {
+      map.setView(latlngs[0], 11);
+    }
+
+    // Add markers for each hub
     coords.forEach((point, i) => {
       const isOrigin = i === 0 || point.isOrigin;
       const isDestination = i === coords.length - 1 || point.isDestination;
 
-      const markerHtml = isOrigin
-        ? `<div style="background:#16a34a; width:14px; height:14px; border:2px solid white; border-radius:50%; box-shadow:0 0 8px rgba(22,163,74,0.8);"></div>`
-        : isDestination
-        ? `<div style="background:#dc2626; width:14px; height:14px; border:2px solid white; border-radius:50%; box-shadow:0 0 8px rgba(220,38,38,0.8);"></div>`
-        : `<div style="background:#2563eb; width:10px; height:10px; border:1.5px solid white; border-radius:50%; box-shadow:0 0 6px rgba(37,99,235,0.7);"></div>`;
+      const markerColor = isOrigin ? '#16a34a' : isDestination ? '#dc2626' : '#2563eb';
+      const markerSize = isOrigin || isDestination ? 14 : 10;
+      const anchor = markerSize / 2;
+
+      const markerHtml = `<div style="background:${markerColor}; width:${markerSize}px; height:${markerSize}px; border:2px solid #ffffff; border-radius:50%; box-shadow:0 0 10px rgba(0,0,0,0.5);"></div>`;
 
       const icon = L.divIcon({
         className: 'custom-div-icon',
         html: markerHtml,
-        iconSize: [14, 14],
-        iconAnchor: [7, 7],
+        iconSize: [markerSize, markerSize],
+        iconAnchor: [anchor, anchor],
       });
 
       L.marker([point.lat, point.lng], { icon })
         .addTo(map)
         .bindPopup(
-          `<div style="font-family:system-ui, sans-serif; font-size:12px; color:#111827; padding:4px;">
-            <strong style="color:${isOrigin ? '#15803d' : isDestination ? '#dc2626' : '#1d4ed8'}">${isOrigin ? 'Origin Booking Post Office' : isDestination ? 'Destination Delivery Post Office' : 'Postal Sorting Hub (RMS/NSH)'}</strong>
+          `<div style="font-family:'Plus Jakarta Sans', system-ui, sans-serif; font-size:12px; color:#111827; padding:4px;">
+            <strong style="color:${markerColor}">${isOrigin ? 'Origin Booking Office' : isDestination ? 'Destination Delivery Office' : 'Sorting Hub (RMS / TMO)'}</strong>
             <p style="margin:2px 0 0 0; color:#4b5563; font-weight:600;">${point.label}</p>
           </div>`
         );
     });
 
-    map.fitBounds(bounds, { padding: [40, 40] });
+    // Invalidate size on next ticks to ensure tiles render regardless of container animation
+    setTimeout(() => map.invalidateSize(), 100);
+    setTimeout(() => map.invalidateSize(), 300);
+
+    // Watch container size changes via ResizeObserver
+    if (typeof ResizeObserver !== 'undefined') {
+      const ro = new ResizeObserver(() => {
+        map.invalidateSize();
+      });
+      ro.observe(container);
+    }
+
     window.__LEAFLET_MAP_INSTANCE__ = map;
   }
 
   // Global updater function for client-side search updates
-  window.updateRouteMap = function(newRoute) {
+  window.updateRouteMap = function (newRoute) {
     if (!newRoute || newRoute.length === 0) return;
     window.__CURRENT_ROUTE__ = newRoute;
-    loadMap();
+
+    if (!window.L) {
+      loadLeafletScript(() => renderMapInstance(newRoute));
+    } else {
+      setTimeout(() => renderMapInstance(newRoute), 50);
+    }
   };
 
-  // Load Leaflet script if not yet loaded
-  if (!window.L) {
+  function loadLeafletScript(cb) {
+    if (window.L) {
+      cb();
+      return;
+    }
     const script = document.createElement('script');
     script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
     script.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=';
     script.crossOrigin = '';
-    script.onload = loadMap;
+    script.onload = () => {
+      cb();
+    };
     document.head.appendChild(script);
-  } else {
-    loadMap();
+  }
+
+  // Initial SSR Route Load
+  if (initialRoute && initialRoute.length > 0) {
+    window.__CURRENT_ROUTE__ = initialRoute;
+    loadLeafletScript(() => renderMapInstance(initialRoute));
   }
 </script>

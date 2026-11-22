@@ -14,9 +14,9 @@ const initialData = sanitized ? await getTrackingDetails(sanitized) : null;
   title={
     initialData
       ? `${initialData.consignmentNumber} (${initialData.statusLabel}) | DakPulse`
-      : 'DakPulse – Real-Time India Post Logistics & Telemetry Network'
+      : 'DakPulse – India Post Tracking & Delivery Calculator'
   }
-  description="Real-time India Post consignment tracking, live sorting hub scan telemetry, interactive transit corridor mapping, and postal directory."
+  description="Fast, ad-free India Post Speed Post and parcel tracking, real-time routing map, and instant postage rate calculator."
 >
   <ConsignmentTracker initialData={initialData} initialAwb={sanitized} />
 </Layout>

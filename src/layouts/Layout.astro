@@ -8,8 +8,8 @@ interface Props {
 }
 
 const {
-  title = 'DakPulse – Real-Time India Post Logistics & Telemetry Network',
-  description = 'High-precision India Post Speed Post tracking, real-time routing telemetry, 150,000+ pincode directory, and bulk dispatch auditing with zero ads.',
+  title = 'DakPulse – India Post Tracking & Delivery Calculator',
+  description = 'Fast, ad-free India Post Speed Post tracking, real-time routing map, 154,000+ postal pincode directory, and instant postage rate calculator.',
 } = Astro.props;
 ---
 
@@ -22,10 +22,18 @@ const {
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23dc2626'/><path d='M25 35 L50 52 L75 35' stroke='white' stroke-width='7' stroke-linecap='round' stroke-linejoin='round' fill='none'/><path d='M25 40 L25 68 C25 70 27 72 29 72 L71 72 C73 72 75 70 75 68 L75 40' stroke='white' stroke-width='7' stroke-linecap='round' stroke-linejoin='round' fill='none'/><circle cx='70' cy='62' r='4' fill='%23fef08a'/></svg>" />
 
+    <!-- Google Fonts: Space Grotesk + Plus Jakarta Sans + Space Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
-    <!-- Theme Initialization Script (Prevents FOUC) -->
+    <!-- Theme Initialization Script -->
     <script is:inline>
       try {
         const saved = localStorage.getItem('dakpulse-theme');
@@ -47,10 +55,10 @@ const {
     <!-- Global Toast Container -->
     <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none" aria-live="polite"></div>
 
-    <!-- Enterprise Footer -->
+    <!-- Clean Industrial Footer -->
     <footer class="border-t border-[var(--border)] bg-[var(--bg-card)] mt-20 transition-colors">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div class="space-y-3 md:col-span-1">
             <div class="flex items-center gap-2.5">
               <div class="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center text-white shadow-sm">
@@ -60,55 +68,58 @@ const {
                   <path d="m16 19 2 2 4-4"></path>
                 </svg>
               </div>
-              <span class="font-bold text-base tracking-tight text-[var(--text-main)]">DakPulse</span>
+              <span class="font-heading font-bold text-lg tracking-tight text-[var(--text-main)]">DakPulse</span>
             </div>
             <p class="text-xs text-[var(--text-muted)] leading-relaxed">
-              Industrial-grade India Post telemetry & consignment tracking engine. Built for high-volume merchants, supply-chain ops, and real-time parcel routing.
+              Fast, privacy-first tracking and postage calculator for India Post Speed Post and parcel consignments.
             </p>
-            <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md text-[11px] font-mono text-emerald-500 bg-emerald-500/10 border border-emerald-500/20">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-              All Systems Operational • 99.98% Uptime
-            </div>
           </div>
 
           <div>
-            <h4 class="text-xs font-semibold uppercase tracking-wider text-[var(--text-main)] mb-3">Postal Services</h4>
+            <h4 class="font-heading text-xs uppercase tracking-wider text-[var(--text-main)] mb-3">Quick Navigation</h4>
             <ul class="space-y-2 text-xs text-[var(--text-muted)]">
-              <li><span class="hover:text-[var(--text-main)] cursor-default">Speed Post (Domestic & EMS)</span></li>
-              <li><span class="hover:text-[var(--text-main)] cursor-default">Express Parcel & Business Parcel</span></li>
-              <li><span class="hover:text-[var(--text-main)] cursor-default">Registered Post (RL / RN)</span></li>
-              <li><span class="hover:text-[var(--text-main)] cursor-default">National Sorting Hubs (NSH/RMS)</span></li>
+              <li><a href="/" class="hover:text-[var(--text-main)] transition-colors">Track Consignment</a></li>
+              <li><a href="/postage-calculator" class="hover:text-[var(--text-main)] transition-colors">Postage Calculator</a></li>
+              <li><a href="/pincode-search" class="hover:text-[var(--text-main)] transition-colors">Pincode Directory</a></li>
+              <li><a href="/bulk-tracking" class="hover:text-[var(--text-main)] transition-colors">Bulk Dispatch</a></li>
             </ul>
           </div>
 
           <div>
-            <h4 class="text-xs font-semibold uppercase tracking-wider text-[var(--text-main)] mb-3">Consignment Prefixes</h4>
+            <h4 class="font-heading text-xs uppercase tracking-wider text-[var(--text-main)] mb-3">Supported Articles</h4>
             <ul class="space-y-2 text-xs text-[var(--text-muted)] font-mono">
               <li><span class="text-red-500 font-semibold">EM / EK / ED</span> Speed Post Domestic</li>
               <li><span class="text-blue-500 font-semibold">CX / CP</span> Air Parcel / Surface</li>
-              <li><span class="text-amber-500 font-semibold">RT / RN</span> Registered Letter / Packet</li>
-              <li><span class="text-emerald-500 font-semibold">JA / JJ</span> Insured / Tracked Value</li>
+              <li><span class="text-amber-500 font-semibold">RT / RN</span> Registered Letter</li>
+              <li><span class="text-emerald-500 font-semibold">JA / JJ</span> Insured / Tracked Post</li>
             </ul>
           </div>
 
           <div>
-            <h4 class="text-xs font-semibold uppercase tracking-wider text-[var(--text-main)] mb-3">Platform Specs</h4>
+            <h4 class="font-heading text-xs uppercase tracking-wider text-[var(--text-main)] mb-3">About & Open Source</h4>
             <p class="text-xs text-[var(--text-muted)] leading-relaxed mb-3">
-              Engineered with Astryx design tokens, SSR edge caching, and direct postal directory resolution. Zero trackers, zero advertising.
+              Independent open-source tool built with Astro 5 and Astryx design tokens. No ads, no third-party trackers.
             </p>
-            <div class="text-[11px] text-[var(--text-subtle)] flex items-center gap-2">
-              <kbd class="px-1.5 py-0.5 rounded bg-[var(--bg-page)] border border-[var(--border)] font-mono text-[10px]">/</kbd>
-              <span>to focus tracking search</span>
+            <div class="text-xs">
+              <a
+                href="https://github.com/ParikshithMohan/dakpulse"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1.5 text-xs text-red-500 hover:text-red-400 font-medium"
+              >
+                <span>GitHub Repository</span>
+                <span>↗</span>
+              </a>
             </div>
           </div>
         </div>
 
         <div class="border-t border-[var(--border)] pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-[var(--text-subtle)] gap-4">
-          <p>© 2026 DakPulse Logistics Intelligence. Privacy-first, open telemetry architecture.</p>
-          <div class="flex items-center gap-4 font-mono text-[11px]">
-            <span>Postal Nodes: 154,200+</span>
+          <p>© 2026 DakPulse. Open-source postal logistics utilities.</p>
+          <div class="flex items-center gap-3">
+            <span>Free Public Tool</span>
             <span>•</span>
-            <span>Latency: &lt;15ms</span>
+            <span>Zero Tracking</span>
           </div>
         </div>
       </div>

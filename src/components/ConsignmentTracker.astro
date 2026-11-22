@@ -19,10 +19,10 @@ const { initialData = null, initialAwb = '' } = Astro.props;
       <div class="flex items-center justify-between border-b border-[var(--border)] pb-3">
         <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--text-subtle)]">
           <span class="w-2 h-2 rounded-full bg-red-500"></span>
-          <span>India Post Consignment Telemetry</span>
+          <span>India Post Consignment Tracker</span>
         </div>
         <div class="text-[11px] font-mono text-[var(--text-subtle)]">
-          Press <kbd class="px-1.5 py-0.5 rounded bg-[var(--bg-page)] border border-[var(--border)] text-[10px] text-[var(--text-muted)] font-mono">/</kbd> to focus
+          Speed Post • Registered Post • Parcels
         </div>
       </div>
 
@@ -31,7 +31,7 @@ const { initialData = null, initialAwb = '' } = Astro.props;
           Track India Post Consignment
         </h1>
         <p class="text-xs text-[var(--text-muted)]">
-          Real-time scan logs, sorting hub transit routing, and delivery verification.
+          Fast, ad-free Speed Post and parcel tracking with real-time delivery status.
         </p>
       </div>
 
@@ -49,7 +49,7 @@ const { initialData = null, initialAwb = '' } = Astro.props;
             type="text"
             name="consignment"
             value={initialAwb}
-            placeholder="Enter 13-character AWB (e.g. ED451209384IN)"
+            placeholder="Enter 13-character AWB (e.g. EE710744405IN)"
             autocomplete="off"
             spellcheck="false"
             required
@@ -85,8 +85,7 @@ const { initialData = null, initialAwb = '' } = Astro.props;
 
       <!-- Standard Format Guide -->
       <div class="flex items-center justify-between text-[11px] text-[var(--text-subtle)] pt-1">
-        <span>Standard: 2 Letters + 9 Digits + "IN" (Speed Post, Reg. Post, Air Parcel)</span>
-        <span class="font-mono text-[10px] text-emerald-500">Live Scraper v3</span>
+        <span>Standard: 2 Letters + 9 Digits + "IN" (e.g. EE, EM, EK, CX, RT)</span>
       </div>
 
       <!-- Recent Consignments (Populated strictly from user's local search history) -->
@@ -134,14 +133,6 @@ const { initialData = null, initialAwb = '' } = Astro.props;
   const recentContainer = document.getElementById('recent-searches-container');
   const recentChips = document.getElementById('recent-chips');
   const clearRecentBtn = document.getElementById('clear-recent-btn');
-
-  // Focus on slash key press
-  window.addEventListener('keydown', (e) => {
-    if (e.key === '/' && document.activeElement !== input) {
-      e.preventDefault();
-      input?.focus();
-    }
-  });
 
   // Load Recents
   function loadRecents() {
@@ -305,6 +296,66 @@ const { initialData = null, initialAwb = '' } = Astro.props;
         ? 'bg-red-500/10 text-red-500 border-red-500/25'
         : 'bg-amber-500/10 text-amber-500 border-amber-500/25';
 
+    // Build smart milestones client-side
+    const officeGroups = new Map<string, typeof r.events>();
+    const groupOrder: string[] = [];
+    for (const ev of r.events) {
+      const normalized = ev.office.replace(/\s*\(\d{6}\)\s*$/, '').trim();
+      if (!officeGroups.has(normalized)) {
+        officeGroups.set(normalized, []);
+        groupOrder.push(normalized);
+      }
+      officeGroups.get(normalized)!.push(ev);
+    }
+
+    const smartMilestones = groupOrder.map((officeName, groupIdx) => {
+      const evs = officeGroups.get(officeName)!;
+      const latestInGroup = evs[0];
+      const isFirst = groupIdx === 0;
+      const isLast = groupIdx === groupOrder.length - 1;
+
+      let title = latestInGroup.event;
+      let badgeLabel = 'In Transit';
+      let badgeClass = 'bg-amber-500/10 text-amber-500 border-amber-500/25';
+
+      const upperEvent = latestInGroup.event.toUpperCase();
+      const upperOffice = officeName.toUpperCase();
+
+      if (upperEvent.includes('DELIVERED') || latestInGroup.status === 'delivered') {
+        title = 'Delivered to Recipient';
+        badgeLabel = 'Delivered';
+        badgeClass = 'bg-emerald-500/10 text-emerald-500 border-emerald-500/25';
+      } else if (upperEvent.includes('OUT FOR DELIVERY') || latestInGroup.status === 'out_for_delivery') {
+        title = `Out for Delivery (${officeName})`;
+        badgeLabel = 'Out for Delivery';
+        badgeClass = 'bg-blue-500/10 text-blue-500 border-blue-500/25';
+      } else if (isLast || upperEvent.includes('BOOK') || latestInGroup.status === 'booked') {
+        title = `Booked at Origin Office`;
+        badgeLabel = 'Origin Booking';
+        badgeClass = 'bg-zinc-500/10 text-zinc-400 border-zinc-500/25';
+      } else if (upperOffice.includes('RMS') || upperOffice.includes('TMO') || upperOffice.includes('NSH')) {
+        title = `Processed at ${officeName}`;
+        badgeLabel = 'Sorting Hub';
+        badgeClass = 'bg-blue-500/10 text-blue-400 border-blue-500/25';
+      } else {
+        title = `Processed at ${officeName}`;
+        badgeLabel = 'Transit Office';
+        badgeClass = 'bg-amber-500/10 text-amber-500 border-amber-500/25';
+      }
+
+      return {
+        title,
+        office: latestInGroup.office,
+        date: latestInGroup.date,
+        time: latestInGroup.time,
+        badgeLabel,
+        badgeClass,
+        scansCount: evs.length,
+        details: latestInGroup.details || (evs.length > 1 ? `${evs.length} internal bag & mail scans consolidated` : ''),
+        isLatest: isFirst,
+      };
+    });
+
     resultsView.innerHTML = `
       <div class="space-y-6">
         <!-- Astryx Detail Header & Milestone Stepper -->
@@ -381,36 +432,77 @@ const { initialData = null, initialAwb = '' } = Astro.props;
           </div>
         </div>
 
-        <!-- Event Timeline -->
+        <!-- Smart Milestones Audit Trail -->
         <div class="astryx-card p-6">
           <div class="flex items-center justify-between pb-3 mb-4 border-b border-[var(--border)]">
             <div class="flex items-center gap-2">
-              <h3 class="text-xs font-bold uppercase tracking-wider text-[var(--text-main)]">Postal Scan Audit Trail</h3>
-              <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-[var(--bg-page)] text-[var(--text-muted)] border border-[var(--border)]">
-                ${r.events.length} Events
+              <h3 class="text-xs font-bold uppercase tracking-wider text-[var(--text-main)]">Transit Milestones</h3>
+              <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                Smart View (${smartMilestones.length} Hubs)
               </span>
             </div>
             <button type="button" onclick="window.print()" class="text-xs font-medium text-[var(--text-muted)] hover:text-[var(--text-main)] flex items-center gap-1.5 focus:outline-none cursor-pointer">
-              <span>Print Receipt</span>
+              <span>Print Dispatch Slip</span>
             </button>
           </div>
-          <div class="space-y-3.5">
-            ${r.events
+          
+          <!-- Compact Milestone Nodes -->
+          <div class="space-y-4">
+            ${smartMilestones
               .map(
-                (ev, i) => `
+                (m, i) => `
               <div class="flex items-start gap-3.5 text-xs">
                 <div class="w-24 shrink-0 text-right">
-                  <span class="font-mono font-semibold text-[var(--text-main)] block">${ev.date}</span>
-                  <span class="font-mono text-[10px] text-[var(--text-subtle)] block">${ev.time}</span>
+                  <span class="font-mono font-semibold text-[var(--text-main)] block">${m.date}</span>
+                  <span class="font-mono text-[10px] text-[var(--text-subtle)] block">${m.time}</span>
                 </div>
                 <div class="relative flex flex-col items-center shrink-0 self-stretch">
-                  <div class="w-2 h-2 rounded-full mt-1.5 ${i === 0 ? 'bg-red-500' : 'bg-[var(--border-subtle)]'}"></div>
-                  ${i !== r.events.length - 1 ? '<div class="w-px flex-1 bg-[var(--border)] my-1"></div>' : ''}
+                  <div class="w-2.5 h-2.5 rounded-full mt-1.5 ${m.isLatest ? (r.currentStatus === 'delivered' ? 'bg-emerald-500 ring-2 ring-emerald-500/30' : 'bg-red-500 ring-2 ring-red-500/30') : 'bg-[var(--border-subtle)]'}"></div>
+                  ${i !== smartMilestones.length - 1 ? '<div class="w-px flex-1 bg-[var(--border)] my-1"></div>' : ''}
                 </div>
                 <div class="flex-1 pb-2">
-                  <span class="font-semibold text-[var(--text-main)]">${ev.event}</span>
-                  <p class="text-[var(--text-muted)] text-[11px] mt-0.5">${ev.office}</p>
-                  ${ev.details ? `<p class="text-[10px] text-[var(--text-subtle)] mt-1 font-mono">${ev.details}</p>` : ''}
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="font-bold text-sm text-[var(--text-main)]">${m.title}</span>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-medium border ${m.badgeClass}">${m.badgeLabel}</span>
+                    ${m.scansCount > 1 ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-[var(--bg-page)] text-[var(--text-subtle)] border border-[var(--border)]">${m.scansCount} internal scans</span>` : ''}
+                  </div>
+                  <p class="text-[var(--text-muted)] text-xs mt-1 font-medium">${m.office}</p>
+                  ${m.details ? `<p class="text-[11px] text-[var(--text-subtle)] mt-1">${m.details}</p>` : ''}
+                </div>
+              </div>
+            `
+              )
+              .join('')}
+          </div>
+
+          <!-- Raw Scans Accordion Trigger -->
+          <div class="mt-6 pt-4 border-t border-[var(--border)] flex items-center justify-between">
+            <button
+              id="dyn-toggle-raw-btn"
+              type="button"
+              class="inline-flex items-center gap-1.5 text-xs font-semibold text-red-500 hover:text-red-400 focus:outline-none cursor-pointer transition-colors"
+            >
+              <span id="dyn-raw-label">Show Complete Scan Log (${r.events.length} Scans)</span>
+              <span id="dyn-raw-arrow" class="transition-transform duration-200">▾</span>
+            </button>
+            <span class="text-[11px] text-[var(--text-subtle)] font-mono">Raw India Post RMS Logs</span>
+          </div>
+
+          <div id="dyn-raw-container" class="hidden mt-4 pt-4 border-t border-[var(--border)] space-y-3">
+            ${r.events
+              .map(
+                (ev) => `
+              <div class="flex items-start gap-3.5 text-xs py-1 border-b border-[var(--border)]/40 last:border-none">
+                <div class="w-24 shrink-0 text-right">
+                  <span class="font-mono text-xs text-[var(--text-muted)] block">${ev.date}</span>
+                  <span class="font-mono text-[10px] text-[var(--text-subtle)] block">${ev.time}</span>
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center gap-2">
+                    <span class="font-mono font-semibold text-xs text-[var(--text-main)]">${ev.event}</span>
+                    <span class="text-[10px] font-mono text-[var(--text-subtle)] bg-[var(--bg-page)] px-1.5 py-0.5 rounded border border-[var(--border)]">${ev.office}</span>
+                  </div>
+                  ${ev.details ? `<p class="text-[11px] text-[var(--text-subtle)] mt-0.5 font-mono">${ev.details}</p>` : ''}
                 </div>
               </div>
             `
@@ -420,14 +512,14 @@ const { initialData = null, initialAwb = '' } = Astro.props;
         </div>
 
         <!-- Route Map Container -->
-        <div class="relative w-full h-[320px] sm:h-[380px] rounded-lg overflow-hidden border border-[var(--border)] bg-[var(--bg-card)]">
-          <div id="leaflet-route-map" class="w-full h-full"></div>
-          <div class="absolute top-3 right-3 z-[1000] px-2.5 py-1 rounded bg-[var(--bg-card)]/95 border border-[var(--border)] text-xs font-medium text-[var(--text-main)] flex items-center gap-2 shadow-xs">
+        <div class="relative w-full h-[340px] sm:h-[400px] rounded-lg overflow-hidden border border-[var(--border)] bg-[var(--bg-card)]">
+          <div id="leaflet-route-map" class="w-full h-full min-h-[340px]" style="min-height: 340px; height: 100%;"></div>
+          <div class="absolute top-3 right-3 z-[1000] px-2.5 py-1 rounded bg-[var(--bg-card)]/95 border border-[var(--border)] text-xs font-medium text-[var(--text-main)] flex items-center gap-2 shadow-xs backdrop-blur-xs">
             <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-            <span>Transit Corridor</span>
+            <span class="font-heading font-semibold text-[11px] uppercase tracking-wider">Delivery Route Corridor</span>
           </div>
-          <div class="absolute bottom-3 left-3 z-[1000] px-2 py-0.5 rounded bg-[var(--bg-card)]/95 border border-[var(--border)] text-[10px] text-[var(--text-subtle)] font-mono shadow-xs pointer-events-none">
-            India Post RMS Transit Network
+          <div class="absolute bottom-3 left-3 z-[1000] px-2 py-0.5 rounded bg-[var(--bg-card)]/95 border border-[var(--border)] text-[10px] text-[var(--text-subtle)] font-mono shadow-xs pointer-events-none backdrop-blur-xs">
+            Transit Routing Network
           </div>
         </div>
       </div>
@@ -445,11 +537,35 @@ const { initialData = null, initialAwb = '' } = Astro.props;
       }
     });
 
-    // Update Route Map smoothly without page refresh
-    const updateFn = (window as unknown as { updateRouteMap?: (route: unknown) => void }).updateRouteMap;
-    if (typeof updateFn === 'function' && r.route && r.route.length > 0) {
-      updateFn(r.route);
-    }
+    // Wire Accordion Toggle
+    const dynToggleBtn = document.getElementById('dyn-toggle-raw-btn');
+    const dynRawContainer = document.getElementById('dyn-raw-container');
+    const dynRawLabel = document.getElementById('dyn-raw-label');
+    const dynRawArrow = document.getElementById('dyn-raw-arrow');
+
+    dynToggleBtn?.addEventListener('click', () => {
+      if (!dynRawContainer) return;
+      const isHidden = dynRawContainer.classList.contains('hidden');
+      if (isHidden) {
+        dynRawContainer.classList.remove('hidden');
+        if (dynRawLabel) dynRawLabel.textContent = 'Hide Complete Scan Log';
+        if (dynRawArrow) dynRawArrow.textContent = '▴';
+      } else {
+        dynRawContainer.classList.add('hidden');
+        if (dynRawLabel) dynRawLabel.textContent = `Show Complete Scan Log (${r.events.length} Scans)`;
+        if (dynRawArrow) dynRawArrow.textContent = '▾';
+      }
+    });
+
+    // Update Route Map smoothly with requestAnimationFrame + timeout
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        const updateFn = (window as unknown as { updateRouteMap?: (route: unknown) => void }).updateRouteMap;
+        if (typeof updateFn === 'function' && r.route && r.route.length > 0) {
+          updateFn(r.route);
+        }
+      }, 50);
+    });
   }
 
   form?.addEventListener('submit', (e) => {
