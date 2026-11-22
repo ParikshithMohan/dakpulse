@@ -1,0 +1,87 @@
+---
+import type { ConsignmentStatus } from '../lib/types';
+
+interface Props {
+  status: ConsignmentStatus | string;
+  size?: 'sm' | 'md' | 'lg';
+  showIcon?: boolean;
+}
+
+const { status, size = 'md', showIcon = true } = Astro.props;
+
+const statusConfigs: Record<string, { label: string; bg: string; text: string; border: string; dot: string }> = {
+  delivered: {
+    label: 'Delivered',
+    bg: 'bg-emerald-500/10 dark:bg-emerald-500/15',
+    text: 'text-emerald-700 dark:text-emerald-400',
+    border: 'border-emerald-500/25',
+    dot: 'bg-emerald-500',
+  },
+  out_for_delivery: {
+    label: 'Out for Delivery',
+    bg: 'bg-blue-500/10 dark:bg-blue-500/15',
+    text: 'text-blue-700 dark:text-blue-400',
+    border: 'border-blue-500/25',
+    dot: 'bg-blue-500',
+  },
+  in_transit: {
+    label: 'In Transit',
+    bg: 'bg-amber-500/10 dark:bg-amber-500/15',
+    text: 'text-amber-700 dark:text-amber-400',
+    border: 'border-amber-500/25',
+    dot: 'bg-amber-500',
+  },
+  dispatched: {
+    label: 'Dispatched',
+    bg: 'bg-indigo-500/10 dark:bg-indigo-500/15',
+    text: 'text-indigo-700 dark:text-indigo-400',
+    border: 'border-indigo-500/25',
+    dot: 'bg-indigo-500',
+  },
+  booked: {
+    label: 'Item Booked',
+    bg: 'bg-slate-500/10 dark:bg-slate-500/15',
+    text: 'text-slate-700 dark:text-slate-300',
+    border: 'border-slate-500/25',
+    dot: 'bg-slate-400',
+  },
+  exception: {
+    label: 'Delivery Exception',
+    bg: 'bg-rose-500/10 dark:bg-rose-500/15',
+    text: 'text-rose-700 dark:text-rose-400',
+    border: 'border-rose-500/25',
+    dot: 'bg-rose-500',
+  },
+  rto: {
+    label: 'Returned to Origin (RTO)',
+    bg: 'bg-rose-500/10 dark:bg-rose-500/15',
+    text: 'text-rose-700 dark:text-rose-400',
+    border: 'border-rose-500/25',
+    dot: 'bg-rose-500',
+  },
+};
+
+const normalizedKey = status.toLowerCase();
+const config = statusConfigs[normalizedKey] || {
+  label: status,
+  bg: 'bg-slate-500/10 dark:bg-slate-500/15',
+  text: 'text-slate-700 dark:text-slate-300',
+  border: 'border-slate-500/25',
+  dot: 'bg-slate-400',
+};
+
+const sizeClasses = {
+  sm: 'text-xs px-2 py-0.5 gap-1.5',
+  md: 'text-xs font-medium px-2.5 py-1 gap-2',
+  lg: 'text-sm font-semibold px-3 py-1.5 gap-2.5',
+}[size];
+---
+
+<span
+  class={`inline-flex items-center rounded-full border ${config.bg} ${config.text} ${config.border} ${sizeClasses} select-none transition-colors`}
+>
+  {showIcon && (
+    <span class={`w-1.5 h-1.5 rounded-full ${config.dot} animate-pulse`} aria-hidden="true" />
+  )}
+  <span>{config.label}</span>
+</span>

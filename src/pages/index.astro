@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ConsignmentTracker from '../components/ConsignmentTracker.astro';
+import { getTrackingDetails, sanitizeConsignmentNumber } from '../lib/tracking-engine';
+
+export const prerender = false;
+
+const rawConsignment = Astro.url.searchParams.get('consignment') ?? '';
+const sanitized = rawConsignment ? sanitizeConsignmentNumber(rawConsignment) : '';
+const initialData = sanitized ? await getTrackingDetails(sanitized) : null;
+---
+
+<Layout
+  title={
+    initialData
+      ? `Tracking ${initialData.consignmentNumber} (${initialData.statusLabel}) | MySpeedPost`
+      : 'Speed Post Tracking – Live India Post Tracking | MySpeedPost'
+  }
+>
+  <ConsignmentTracker initialData={initialData} initialAwb={sanitized} />
+</Layout>

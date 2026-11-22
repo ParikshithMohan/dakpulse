@@ -1,0 +1,120 @@
+---
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--bg-card)]/80 backdrop-blur-md transition-colors">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <!-- Brand Logo -->
+    <a href="/" class="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 rounded-lg p-1">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-600 to-red-500 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-rose-500/25 group-hover:scale-105 transition-transform">
+        SP
+      </div>
+      <div>
+        <div class="flex items-center gap-1.5">
+          <span class="font-bold text-base tracking-tight text-[var(--text-main)]">MySpeedPost</span>
+          <span class="text-[10px] uppercase tracking-wider font-extrabold px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">Pro</span>
+        </div>
+        <p class="text-[11px] text-[var(--text-subtle)] font-medium">India Post Logistics Engine</p>
+      </div>
+    </a>
+
+    <!-- Nav Links -->
+    <nav class="hidden md:flex items-center gap-1 bg-[var(--bg-page)] p-1 rounded-xl border border-[var(--border)]" aria-label="Main Navigation">
+      <a
+        href="/"
+        class={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+          currentPath === '/'
+            ? 'bg-[var(--bg-card)] text-[var(--text-main)] shadow-sm font-semibold'
+            : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
+        }`}
+      >
+        Track Single
+      </a>
+      <a
+        href="/bulk-tracking"
+        class={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+          currentPath.startsWith('/bulk-tracking')
+            ? 'bg-[var(--bg-card)] text-[var(--text-main)] shadow-sm font-semibold'
+            : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
+        }`}
+      >
+        Bulk Tracking
+      </a>
+      <a
+        href="/pincode-search"
+        class={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+          currentPath.startsWith('/pincode-search')
+            ? 'bg-[var(--bg-card)] text-[var(--text-main)] shadow-sm font-semibold'
+            : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
+        }`}
+      >
+        Pincode Directory
+      </a>
+    </nav>
+
+    <!-- Controls & Actions -->
+    <div class="flex items-center gap-2.5">
+      <!-- Zero Ads Pill -->
+      <span class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+        Zero Ads • 100% Free
+      </span>
+
+      <!-- Theme Switcher -->
+      <button
+        id="theme-toggle-btn"
+        type="button"
+        class="w-9 h-9 rounded-xl border border-[var(--border)] bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] text-[var(--text-muted)] hover:text-[var(--text-main)] flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 cursor-pointer"
+        title="Toggle dark/light mode"
+        aria-label="Toggle theme"
+      >
+        <!-- Sun icon visible in dark mode (click to go light) -->
+        <svg id="sun-icon" class="w-4 h-4 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        <!-- Moon icon visible in light mode (click to go dark) -->
+        <svg id="moon-icon" class="w-4 h-4 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation Bar -->
+  <div class="md:hidden border-t border-[var(--border)] px-4 py-2 flex items-center justify-around bg-[var(--bg-card)]">
+    <a
+      href="/"
+      class={`text-xs font-semibold py-1.5 px-3 rounded-lg ${
+        currentPath === '/' ? 'bg-rose-500/10 text-rose-500' : 'text-[var(--text-muted)]'
+      }`}
+    >
+      Track Single
+    </a>
+    <a
+      href="/bulk-tracking"
+      class={`text-xs font-semibold py-1.5 px-3 rounded-lg ${
+        currentPath.startsWith('/bulk-tracking') ? 'bg-rose-500/10 text-rose-500' : 'text-[var(--text-muted)]'
+      }`}
+    >
+      Bulk Tracking
+    </a>
+    <a
+      href="/pincode-search"
+      class={`text-xs font-semibold py-1.5 px-3 rounded-lg ${
+        currentPath.startsWith('/pincode-search') ? 'bg-rose-500/10 text-rose-500' : 'text-[var(--text-muted)]'
+      }`}
+    >
+      Pincodes
+    </a>
+  </div>
+</header>
+
+<script is:inline>
+  const toggleBtn = document.getElementById('theme-toggle-btn');
+  toggleBtn?.addEventListener('click', () => {
+    const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+    const nextTheme = isDark ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', nextTheme);
+    localStorage.setItem('speedpost-theme', nextTheme);
+  });
+</script>

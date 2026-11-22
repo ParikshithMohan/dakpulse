@@ -1,0 +1,237 @@
+---
+// Postal Pincode Directory Component
+---
+
+<div class="space-y-8 max-w-4xl mx-auto">
+  <!-- Search Card -->
+  <div class="p-6 sm:p-10 rounded-3xl border border-[var(--border)] bg-gradient-to-b from-[var(--bg-card)] to-[var(--bg-card)]/50 shadow-xl">
+    <div class="text-center max-w-xl mx-auto space-y-3">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+        <span>📮</span> Official Postal Directory
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-black text-[var(--text-main)]">
+        India Post Pincode & Office Search
+      </h1>
+      <p class="text-xs sm:text-sm text-[var(--text-muted)]">
+        Search through over 150,000+ Indian post offices by 6-digit Pincode, city, or branch name.
+      </p>
+
+      <!-- Search Input Form -->
+      <form id="pincode-search-form" class="mt-6 flex flex-col sm:flex-row items-center gap-2">
+        <div class="relative w-full flex-1">
+          <input
+            id="pincode-input"
+            type="text"
+            name="query"
+            placeholder="Enter 6-digit pincode or post office name (e.g. 110001, 110019, 560034, Fort)"
+            autocomplete="off"
+            spellcheck="false"
+            required
+            class="w-full h-12 pl-4 pr-10 rounded-2xl border border-[var(--border)] bg-[var(--bg-page)] text-[var(--text-main)] placeholder-[var(--text-subtle)] text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-inner"
+          />
+          <button
+            type="button"
+            id="clear-pincode-btn"
+            class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-subtle)] hover:text-[var(--text-main)] text-sm cursor-pointer"
+          >
+            ✕
+          </button>
+        </div>
+
+        <button
+          type="submit"
+          id="pincode-submit-btn"
+          class="w-full sm:w-auto h-12 px-6 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs tracking-wide shadow-md shadow-blue-600/20 transition-all flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+        >
+          <span id="pin-btn-text">Search</span>
+          <span id="pin-btn-spinner" class="hidden w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+        </button>
+      </form>
+
+      <!-- Quick Samples -->
+      <div class="pt-4 flex flex-wrap items-center justify-center gap-2 text-xs">
+        <span class="text-[var(--text-subtle)]">Try Pincodes:</span>
+        <button type="button" class="pin-sample px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--bg-page)] text-[var(--text-muted)] hover:text-blue-500 hover:border-blue-500/40 text-xs font-mono transition-colors cursor-pointer" data-pin="110001">
+          110001 (Connaught Place)
+        </button>
+        <button type="button" class="pin-sample px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--bg-page)] text-[var(--text-muted)] hover:text-blue-500 hover:border-blue-500/40 text-xs font-mono transition-colors cursor-pointer" data-pin="110019">
+          110019 (Kalkaji)
+        </button>
+        <button type="button" class="pin-sample px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--bg-page)] text-[var(--text-muted)] hover:text-blue-500 hover:border-blue-500/40 text-xs font-mono transition-colors cursor-pointer" data-pin="560034">
+          560034 (Koramangala)
+        </button>
+        <button type="button" class="pin-sample px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--bg-page)] text-[var(--text-muted)] hover:text-blue-500 hover:border-blue-500/40 text-xs font-mono transition-colors cursor-pointer" data-pin="400001">
+          400001 (Mumbai GPO)
+        </button>
+        <button type="button" class="pin-sample px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--bg-page)] text-[var(--text-muted)] hover:text-blue-500 hover:border-blue-500/40 text-xs font-mono transition-colors cursor-pointer" data-pin="700001">
+          700001 (Kolkata)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div id="pincode-loading" class="hidden text-center py-12">
+    <div class="w-8 h-8 border-3 border-blue-500/30 border-t-blue-500 rounded-full animate-spin mx-auto mb-3"></div>
+    <p class="text-xs text-[var(--text-muted)]">Looking up postal directory…</p>
+  </div>
+
+  <!-- Results Section -->
+  <div id="pincode-results-section" class="hidden space-y-4">
+    <div class="flex items-center justify-between px-1">
+      <h3 class="text-xs font-bold uppercase tracking-wider text-[var(--text-subtle)]">
+        Found <span id="results-count" class="text-[var(--text-main)] font-black">0</span> Post Offices
+      </h3>
+      <span class="text-[11px] text-[var(--text-subtle)]">Click Pincode button to copy</span>
+    </div>
+
+    <div id="pincode-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <!-- Injected dynamically -->
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div id="pincode-empty" class="hidden text-center py-12 p-8 rounded-2xl border border-[var(--border)] bg-[var(--bg-card)]">
+    <span class="text-3xl block mb-2">🔍</span>
+    <h3 class="text-sm font-bold text-[var(--text-main)]">No matching post offices found</h3>
+    <p class="text-xs text-[var(--text-muted)] mt-1 max-w-sm mx-auto">
+      Double-check the 6-digit postal code or verify the spelling of the district/office name.
+    </p>
+  </div>
+</div>
+
+<script>
+  import type { PincodeOffice } from '../lib/types';
+
+  const form = document.getElementById('pincode-search-form') as HTMLFormElement | null;
+  const input = document.getElementById('pincode-input') as HTMLInputElement | null;
+  const clearBtn = document.getElementById('clear-pincode-btn');
+  const btnText = document.getElementById('pin-btn-text');
+  const btnSpinner = document.getElementById('pin-btn-spinner');
+  const loading = document.getElementById('pincode-loading');
+  const resultsSection = document.getElementById('pincode-results-section');
+  const cardsGrid = document.getElementById('pincode-cards-grid');
+  const countSpan = document.getElementById('results-count');
+  const emptyState = document.getElementById('pincode-empty');
+
+  input?.addEventListener('input', () => {
+    if (clearBtn) {
+      if (input.value) clearBtn.classList.remove('hidden');
+      else clearBtn.classList.add('hidden');
+    }
+  });
+
+  clearBtn?.addEventListener('click', () => {
+    if (input) input.value = '';
+    clearBtn.classList.add('hidden');
+    if (resultsSection) resultsSection.classList.add('hidden');
+    if (emptyState) emptyState.classList.add('hidden');
+    if (cardsGrid) cardsGrid.innerHTML = '';
+  });
+
+  document.querySelectorAll('.pin-sample').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const pin = btn.getAttribute('data-pin');
+      if (pin && input) {
+        input.value = pin;
+        if (clearBtn) clearBtn.classList.remove('hidden');
+        void executeSearch(pin);
+      }
+    });
+  });
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (input) void executeSearch(input.value);
+  });
+
+  async function executeSearch(query: string) {
+    const trimmed = query.trim();
+    if (!trimmed) return;
+
+    if (resultsSection) resultsSection.classList.add('hidden');
+    if (emptyState) emptyState.classList.add('hidden');
+    if (cardsGrid) cardsGrid.innerHTML = '';
+    if (loading) loading.classList.remove('hidden');
+    if (btnText) btnText.textContent = 'Searching…';
+    if (btnSpinner) btnSpinner.classList.remove('hidden');
+
+    try {
+      const res = await fetch(`/api/pincode?query=${encodeURIComponent(trimmed)}`);
+      const data = await res.json();
+
+      if (!res.ok || !data.success || !Array.isArray(data.offices) || data.offices.length === 0) {
+        if (emptyState) emptyState.classList.remove('hidden');
+        return;
+      }
+
+      const offices = data.offices as PincodeOffice[];
+      if (countSpan) countSpan.textContent = String(offices.length);
+
+      if (cardsGrid) {
+        cardsGrid.innerHTML = offices
+          .map((po) => {
+            const isDelivery = (po.deliveryStatus || '').toLowerCase() === 'delivery';
+
+            return `
+              <div class="p-5 rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] hover:border-blue-500/30 transition-all shadow-sm space-y-3">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <h4 class="font-bold text-sm text-[var(--text-main)]">${po.name}</h4>
+                    <span class="inline-block mt-0.5 text-[10px] uppercase font-semibold text-[var(--text-subtle)]">${po.branchType || 'Post Office'}</span>
+                  </div>
+                  <button type="button" class="copy-pin-btn font-mono font-black text-xs px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 hover:scale-105 transition-transform cursor-pointer" data-pin="${po.pincode}" title="Click to copy pincode">
+                    ${po.pincode} 📋
+                  </button>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-xs pt-1 border-t border-[var(--border)]">
+                  <div>
+                    <span class="text-[11px] text-[var(--text-subtle)] block">District</span>
+                    <strong class="text-[var(--text-muted)] font-medium truncate block">${po.district || 'N/A'}</strong>
+                  </div>
+                  <div>
+                    <span class="text-[11px] text-[var(--text-subtle)] block">State</span>
+                    <strong class="text-[var(--text-muted)] font-medium truncate block">${po.state || 'N/A'}</strong>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-1">
+                  <span class="text-[11px] text-[var(--text-subtle)] truncate max-w-[180px]">${po.division || po.circle || 'India Post'}</span>
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                    isDelivery
+                      ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20'
+                      : 'bg-zinc-500/10 text-zinc-500 border border-zinc-500/20'
+                  }">
+                    ${isDelivery ? '✓ Delivery Office' : 'Non-Delivery'}
+                  </span>
+                </div>
+              </div>
+            `;
+          })
+          .join('');
+
+        cardsGrid.querySelectorAll('.copy-pin-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const pin = btn.getAttribute('data-pin');
+            if (pin && navigator.clipboard) {
+              navigator.clipboard.writeText(pin);
+              const toastFn = (window as unknown as { showToast?: (m: string) => void }).showToast;
+              if (typeof toastFn === 'function') {
+                toastFn(`Copied Pincode: ${pin}`);
+              }
+            }
+          });
+        });
+      }
+
+      if (resultsSection) resultsSection.classList.remove('hidden');
+    } catch (err) {
+      if (emptyState) emptyState.classList.remove('hidden');
+    } finally {
+      if (loading) loading.classList.add('hidden');
+      if (btnText) btnText.textContent = 'Search';
+      if (btnSpinner) btnSpinner.classList.add('hidden');
+    }
+  }
+</script>

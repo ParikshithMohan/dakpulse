@@ -1,0 +1,191 @@
+---
+// Native Accessible Modal for Barcode & QR Code Scanning
+---
+
+<dialog id="qr-scanner-modal" class="native-modal" aria-labelledby="qr-modal-title">
+  <div class="p-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between pb-4 border-b border-[var(--border)]">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-rose-500/10 text-rose-500 flex items-center justify-center font-bold">
+          📷
+        </div>
+        <div>
+          <h3 id="qr-modal-title" class="text-sm font-bold text-[var(--text-main)]">
+            Scan Consignment Receipt
+          </h3>
+          <p class="text-[11px] text-[var(--text-muted)]">Point camera at QR code or barcode</p>
+        </div>
+      </div>
+      <button
+        id="close-qr-scanner"
+        type="button"
+        class="w-8 h-8 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-card-hover)] flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+        aria-label="Close scanner dialog"
+      >
+        ✕
+      </button>
+    </div>
+
+    <!-- Scanner Viewport -->
+    <div class="mt-4 relative rounded-xl overflow-hidden bg-black aspect-video flex items-center justify-center border border-[var(--border)]">
+      <div id="qr-reader" class="w-full h-full"></div>
+      
+      <!-- Overlay Guides -->
+      <div id="scanner-overlay" class="absolute inset-0 pointer-events-none flex flex-col items-center justify-center">
+        <div class="w-48 h-28 border-2 border-rose-500/70 rounded-lg relative">
+          <div class="absolute -top-1 -left-1 w-3 h-3 border-t-2 border-l-2 border-rose-500"></div>
+          <div class="absolute -top-1 -right-1 w-3 h-3 border-t-2 border-r-2 border-rose-500"></div>
+          <div class="absolute -bottom-1 -left-1 w-3 h-3 border-b-2 border-l-2 border-rose-500"></div>
+          <div class="absolute -bottom-1 -right-1 w-3 h-3 border-b-2 border-r-2 border-rose-500"></div>
+          <div class="w-full h-0.5 bg-rose-500/50 absolute top-1/2 -translate-y-1/2 animate-pulse"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Status Pill -->
+    <div
+      id="qr-scanner-status"
+      class="mt-4 px-3 py-2 rounded-lg text-xs text-center font-medium bg-[var(--bg-page)] text-[var(--text-muted)] border border-[var(--border)]"
+      role="status"
+    >
+      Click "Start Camera" to scan your consignment slip
+    </div>
+
+    <!-- Modal Actions -->
+    <div class="mt-5 flex items-center justify-between gap-3 pt-3 border-t border-[var(--border)]">
+      <span class="text-[11px] text-[var(--text-subtle)]">Supports Code-128 & QR</span>
+      <div class="flex items-center gap-2">
+        <button
+          id="toggle-camera-btn"
+          type="button"
+          class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-rose-600 hover:bg-rose-700 text-white shadow-md shadow-rose-600/20 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+        >
+          Start Camera
+        </button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
+
+  const modal = document.getElementById('qr-scanner-modal') as HTMLDialogElement | null;
+  const closeBtn = document.getElementById('close-qr-scanner');
+  const toggleCameraBtn = document.getElementById('toggle-camera-btn');
+  const statusEl = document.getElementById('qr-scanner-status');
+
+  let qrScanner: Html5Qrcode | null = null;
+  let isScanning = false;
+
+  function playSuccessBeep() {
+    try {
+      const audioCtx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, audioCtx.currentTime); // A5
+      gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.15);
+    } catch (e) {
+      // Audio not permitted without interaction
+    }
+  }
+
+  async function startScanning() {
+    if (isScanning || !modal) return;
+    if (statusEl) statusEl.textContent = 'Requesting camera access…';
+
+    try {
+      if (!qrScanner) {
+        qrScanner = new Html5Qrcode('qr-reader');
+      }
+
+      await qrScanner.start(
+        { facingMode: 'environment' },
+        {
+          fps: 15,
+          qrbox: { width: 220, height: 130 },
+          formatsToSupport: [
+            Html5QrcodeSupportedFormats.QR_CODE,
+            Html5QrcodeSupportedFormats.CODE_128,
+            Html5QrcodeSupportedFormats.CODE_39,
+          ],
+        },
+        (decodedText) => {
+          playSuccessBeep();
+          stopScanning();
+          modal.close();
+
+          // Dispatch global custom event
+          window.dispatchEvent(
+            new CustomEvent('consignment-scanned', {
+              detail: { code: decodedText },
+            })
+          );
+
+          if ((window as unknown as { showToast?: (m: string) => void }).showToast) {
+            (window as unknown as { showToast: (m: string) => void }).showToast(`Scanned: ${decodedText}`);
+          }
+        },
+        () => {
+          // ignore transient scan misses
+        }
+      );
+
+      isScanning = true;
+      if (statusEl) statusEl.textContent = 'Camera active. Point at receipt barcode.';
+      if (toggleCameraBtn) toggleCameraBtn.textContent = 'Stop Camera';
+    } catch (err) {
+      if (statusEl) {
+        statusEl.textContent = 'Camera access denied or unavailable on this device.';
+      }
+    }
+  }
+
+  async function stopScanning() {
+    if (qrScanner && isScanning) {
+      try {
+        await qrScanner.stop();
+      } catch (e) {}
+      isScanning = false;
+      if (statusEl) statusEl.textContent = 'Camera stopped.';
+      if (toggleCameraBtn) toggleCameraBtn.textContent = 'Start Camera';
+    }
+  }
+
+  // Light-dismiss on click backdrop
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      stopScanning();
+      modal.close();
+    }
+  });
+
+  closeBtn?.addEventListener('click', () => {
+    stopScanning();
+    modal?.close();
+  });
+
+  modal?.addEventListener('close', () => {
+    stopScanning();
+  });
+
+  toggleCameraBtn?.addEventListener('click', () => {
+    if (isScanning) {
+      stopScanning();
+    } else {
+      startScanning();
+    }
+  });
+
+  // Listen to open request from tracker
+  window.addEventListener('open-qr-scanner', () => {
+    modal?.showModal();
+    startScanning();
+  });
+</script>
