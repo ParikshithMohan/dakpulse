@@ -1,0 +1,301 @@
+---
+// Algorithmic Postal Corridor Radar based on algorithmic-art skill
+// Deterministic 60fps generative telemetry transit radar for national postal corridors
+interface Props {
+  class?: string;
+  height?: number;
+}
+
+const { class: className = '', height = 340 } = Astro.props;
+---
+
+<div class={`relative w-full rounded-xl overflow-hidden border border-zinc-800 bg-[#090a0d] shadow-2xl ${className}`}>
+  <!-- Radar Canvas -->
+  <canvas id="corridor-radar-canvas" class="w-full h-full block cursor-crosshair"></canvas>
+
+  <!-- Top Overlay Telemetry Bar -->
+  <div class="absolute top-3 left-4 right-4 flex items-center justify-between pointer-events-none text-[11px] font-mono">
+    <div class="flex items-center gap-2 px-2.5 py-1 rounded bg-zinc-900/80 border border-zinc-700/60 backdrop-blur-sm text-zinc-300">
+      <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+      <span class="font-semibold text-emerald-400">CORRIDOR TELEMETRY</span>
+      <span class="text-zinc-500">|</span>
+      <span id="radar-hub-count" class="text-zinc-400">8 PRIMARY NSH NODES</span>
+    </div>
+
+    <div class="hidden sm:flex items-center gap-3 px-2.5 py-1 rounded bg-zinc-900/80 border border-zinc-700/60 backdrop-blur-sm text-zinc-400">
+      <span>GRID: 28.61°N, 77.20°E</span>
+      <span class="text-zinc-600">/</span>
+      <span class="text-emerald-400 font-bold">LATENCY: 12ms</span>
+    </div>
+  </div>
+
+  <!-- Bottom Interaction Prompt -->
+  <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between pointer-events-none text-[10px] font-mono text-zinc-500">
+    <span>[HOVER TO PROBE CORRIDOR VECTORS]</span>
+    <span class="text-zinc-400">NATIONAL LOGISTICS GRID // SYSTEM ACTIVE</span>
+  </div>
+</div>
+
+<script>
+  // High-performance canvas-based corridor telemetry system
+  function initCorridorRadar() {
+    const canvas = document.getElementById('corridor-radar-canvas') as HTMLCanvasElement | null;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = 0;
+    let height = 0;
+    let dpr = window.devicePixelRatio || 1;
+    let mouseX = -1000;
+    let mouseY = -1000;
+    let isHovered = false;
+
+    // Major India Post National Sorting Hubs (Normalized Coordinates roughly mapping India)
+    const hubs = [
+      { id: 'DEL', name: 'Delhi NSH', nx: 0.38, ny: 0.28, type: 'primary' },
+      { id: 'BOM', name: 'Mumbai AP TMO', nx: 0.26, ny: 0.58, type: 'primary' },
+      { id: 'BLR', name: 'Bengaluru RMS', nx: 0.38, ny: 0.78, type: 'primary' },
+      { id: 'MAA', name: 'Chennai Air Stn', nx: 0.46, ny: 0.77, type: 'primary' },
+      { id: 'CCU', name: 'Kolkata NSH', nx: 0.74, ny: 0.44, type: 'primary' },
+      { id: 'HYD', name: 'Hyderabad SPH', nx: 0.42, ny: 0.62, type: 'secondary' },
+      { id: 'AMD', name: 'Ahmedabad RMS', nx: 0.23, ny: 0.42, type: 'secondary' },
+      { id: 'GAU', name: 'Guwahati Air Hub', nx: 0.86, ny: 0.32, type: 'secondary' }
+    ];
+
+    // Corridors connecting hubs
+    const routes = [
+      { from: 0, to: 1, flow: 'bidirectional', weight: 3 }, // DEL - BOM
+      { from: 0, to: 4, flow: 'bidirectional', weight: 3 }, // DEL - CCU
+      { from: 0, to: 2, flow: 'bidirectional', weight: 3 }, // DEL - BLR
+      { from: 1, to: 2, flow: 'bidirectional', weight: 3 }, // BOM - BLR
+      { from: 1, to: 5, flow: 'bidirectional', weight: 2 }, // BOM - HYD
+      { from: 2, to: 3, flow: 'bidirectional', weight: 2 }, // BLR - MAA
+      { from: 5, to: 3, flow: 'bidirectional', weight: 2 }, // HYD - MAA
+      { from: 4, to: 7, flow: 'bidirectional', weight: 2 }, // CCU - GAU
+      { from: 1, to: 6, flow: 'bidirectional', weight: 2 }, // BOM - AMD
+      { from: 0, to: 6, flow: 'bidirectional', weight: 2 }, // DEL - AMD
+      { from: 4, to: 5, flow: 'bidirectional', weight: 2 }  // CCU - HYD
+    ];
+
+    // Animated Transit Packets (representing mail bags in flight)
+    interface Packet {
+      routeIndex: number;
+      progress: number;
+      speed: number;
+      color: string;
+      size: number;
+      reverse: boolean;
+      id: string;
+    }
+
+    const packets: Packet[] = [];
+    for (let i = 0; i < 28; i++) {
+      packets.push({
+        routeIndex: Math.floor(Math.random() * routes.length),
+        progress: Math.random(),
+        speed: 0.003 + Math.random() * 0.005,
+        color: Math.random() > 0.3 ? '#10b981' : '#ef4444',
+        size: 2 + Math.random() * 2,
+        reverse: Math.random() > 0.5,
+        id: `IN-${Math.floor(1000 + Math.random() * 9000)}`
+      });
+    }
+
+    function resize() {
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      width = rect.width;
+      height = Math.max(rect.height, 300);
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseX = e.clientX - rect.left;
+      mouseY = e.clientY - rect.top;
+      isHovered = true;
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+      mouseX = -1000;
+      mouseY = -1000;
+      isHovered = false;
+    });
+
+    let time = 0;
+
+    function render() {
+      time += 0.02;
+      ctx.clearRect(0, 0, width, height);
+
+      // 1. Background Grid & Coordinates
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+      ctx.lineWidth = 1;
+      const gridSize = 40;
+      for (let x = 0; x < width; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+      }
+      for (let y = 0; y < height; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+
+      // 2. Hub Positions mapped to canvas
+      const nodeCoords = hubs.map(h => ({
+        ...h,
+        x: h.nx * width,
+        y: h.ny * height
+      }));
+
+      // 3. Render Route Corridors (Curved quadratic arcs)
+      routes.forEach((route, idx) => {
+        const p1 = nodeCoords[route.from];
+        const p2 = nodeCoords[route.to];
+
+        // Slight quadratic curve offset
+        const midX = (p1.x + p2.x) / 2;
+        const midY = (p1.y + p2.y) / 2;
+        const dx = p2.x - p1.x;
+        const dy = p2.y - p1.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const normalX = -dy / dist;
+        const normalY = dx / dist;
+        const curveOffset = Math.sin(idx * 1.5) * 18;
+        const ctrlX = midX + normalX * curveOffset;
+        const ctrlY = midY + normalY * curveOffset;
+
+        // Check distance to mouse for hover highlight
+        const mouseDist = Math.hypot(mouseX - midX, mouseY - midY);
+        const isNear = mouseDist < 60;
+
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.quadraticCurveTo(ctrlX, ctrlY, p2.x, p2.y);
+        ctx.strokeStyle = isNear
+          ? 'rgba(16, 185, 129, 0.7)'
+          : 'rgba(255, 255, 255, 0.08)';
+        ctx.lineWidth = isNear ? 2 : 1;
+        ctx.stroke();
+
+        // Draw active pulse dash along corridor
+        ctx.setLineDash([4, 12]);
+        ctx.lineDashOffset = -time * 20;
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.quadraticCurveTo(ctrlX, ctrlY, p2.x, p2.y);
+        ctx.strokeStyle = isNear ? 'rgba(52, 211, 153, 0.9)' : 'rgba(16, 185, 129, 0.25)';
+        ctx.lineWidth = isNear ? 2 : 1;
+        ctx.stroke();
+        ctx.setLineDash([]);
+      });
+
+      // 4. Render Transit Packets
+      packets.forEach(pkt => {
+        pkt.progress += pkt.speed;
+        if (pkt.progress > 1) {
+          pkt.progress = 0;
+          pkt.routeIndex = Math.floor(Math.random() * routes.length);
+        }
+
+        const route = routes[pkt.routeIndex];
+        const p1 = nodeCoords[route.from];
+        const p2 = nodeCoords[route.to];
+
+        const t = pkt.reverse ? 1 - pkt.progress : pkt.progress;
+        const midX = (p1.x + p2.x) / 2;
+        const midY = (p1.y + p2.y) / 2;
+        const dx = p2.x - p1.x;
+        const dy = p2.y - p1.y;
+        const dist = Math.hypot(dx, dy);
+        const curveOffset = Math.sin(pkt.routeIndex * 1.5) * 18;
+        const ctrlX = midX + (-dy / dist) * curveOffset;
+        const ctrlY = midY + (dx / dist) * curveOffset;
+
+        // Quadratic Bezier interpolation: B(t) = (1-t)^2*P0 + 2(1-t)t*P1 + t^2*P2
+        const curX = (1 - t) * (1 - t) * p1.x + 2 * (1 - t) * t * ctrlX + t * t * p2.x;
+        const curY = (1 - t) * (1 - t) * p1.y + 2 * (1 - t) * t * ctrlY + t * t * p2.y;
+
+        // Packet Core
+        ctx.beginPath();
+        ctx.arc(curX, curY, pkt.size, 0, Math.PI * 2);
+        ctx.fillStyle = pkt.color;
+        ctx.shadowColor = pkt.color;
+        ctx.shadowBlur = 8;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+
+      // 5. Render Hub Nodes
+      nodeCoords.forEach(node => {
+        const isPrimary = node.type === 'primary';
+        const isNear = Math.hypot(mouseX - node.x, mouseY - node.y) < 35;
+
+        // Pulsing radar ring
+        const ringRadius = 10 + (Math.sin(time * 2 + node.x) * 4);
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, ringRadius, 0, Math.PI * 2);
+        ctx.strokeStyle = isNear ? 'rgba(52, 211, 153, 0.8)' : 'rgba(16, 185, 129, 0.2)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Node center
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, isPrimary ? 4.5 : 3, 0, Math.PI * 2);
+        ctx.fillStyle = isNear ? '#34d399' : (isPrimary ? '#10b981' : '#6ee7b7');
+        ctx.fill();
+
+        // Node Label
+        ctx.font = '600 10px "Space Mono", monospace';
+        ctx.fillStyle = isNear ? '#ffffff' : 'rgba(255, 255, 255, 0.7)';
+        ctx.fillText(node.id, node.x + 8, node.y - 6);
+
+        ctx.font = '400 8.5px "Plus Jakarta Sans", sans-serif';
+        ctx.fillStyle = isNear ? '#34d399' : 'rgba(156, 163, 175, 0.8)';
+        ctx.fillText(node.name, node.x + 8, node.y + 6);
+      });
+
+      // 6. Mouse Crosshair & Telemetry Readout
+      if (isHovered && mouseX > 0 && mouseY > 0) {
+        ctx.strokeStyle = 'rgba(239, 68, 68, 0.5)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([3, 3]);
+
+        // Crosshairs
+        ctx.beginPath();
+        ctx.moveTo(mouseX, 0);
+        ctx.lineTo(mouseX, height);
+        ctx.moveTo(0, mouseY);
+        ctx.lineTo(width, mouseY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Cursor coordinates readout
+        ctx.font = '500 9px "Space Mono", monospace';
+        ctx.fillStyle = '#f87171';
+        ctx.fillText(`GEO [${Math.round(mouseX)}, ${Math.round(mouseY)}]`, mouseX + 8, mouseY - 8);
+      }
+
+      requestAnimationFrame(render);
+    }
+
+    render();
+  }
+
+  // Initialize on DOM load and view transitions
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCorridorRadar);
+  } else {
+    initCorridorRadar();
+  }
+</script>

@@ -2,6 +2,8 @@
 import BarcodeScannerModal from './BarcodeScannerModal.astro';
 import RouteMap from './RouteMap.astro';
 import TrackingTimeline from './TrackingTimeline.astro';
+import IsometricPostalHub from './IsometricPostalHub.astro';
+import AlgorithmicCorridorRadar from './AlgorithmicCorridorRadar.astro';
 import type { TrackingResult } from '../lib/types';
 
 interface Props {
@@ -12,101 +14,162 @@ interface Props {
 const { initialData = null, initialAwb = '' } = Astro.props;
 ---
 
-<div class="space-y-8">
-  <!-- Astryx Precision Command Header -->
-  <div class="astryx-card p-6 sm:p-8">
-    <div class="max-w-2xl mx-auto space-y-4">
+<div class="space-y-10">
+  <!-- Modern Designer Tech SaaS Hero & Command Center -->
+  <div class="relative rounded-2xl border border-[var(--border)] bg-[var(--bg-card)] backdrop-blur-md p-6 sm:p-10 shadow-2xl overflow-hidden crosshair-corner">
+    <!-- Ambient Accent Glow -->
+    <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-red-600/10 blur-3xl pointer-events-none"></div>
+    <div class="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-emerald-600/10 blur-3xl pointer-events-none"></div>
+
+    <div class="relative z-10 max-w-3xl mx-auto space-y-6">
+      <!-- Eyebrow Telemetry Chip -->
       <div class="flex items-center justify-between border-b border-[var(--border)] pb-3">
-        <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--text-subtle)]">
-          <span class="w-2 h-2 rounded-full bg-red-500"></span>
-          <span>India Post Consignment Tracker</span>
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 dark:text-red-400 text-[11px] font-mono font-semibold">
+          <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+          <span>POSTAL TELEMETRY // AP-96 ENGINE</span>
         </div>
-        <div class="text-[11px] font-mono text-[var(--text-subtle)]">
-          Speed Post • Registered Post • Parcels
+        <div class="hidden sm:flex items-center gap-3 font-mono text-[11px] text-[var(--text-subtle)]">
+          <span>SPEED POST</span>
+          <span>•</span>
+          <span>AIR PARCEL</span>
+          <span>•</span>
+          <span>REG POST</span>
         </div>
       </div>
 
-      <div class="space-y-1">
-        <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-[var(--text-main)]">
-          Track India Post Consignment
+      <!-- Main Headline & Subtitle -->
+      <div class="space-y-2 text-center sm:text-left">
+        <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-[var(--text-main)] font-heading leading-tight">
+          Real-time India Post <br class="hidden sm:inline" />
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-rose-400 to-amber-500">
+            Consignment Telemetry.
+          </span>
         </h1>
-        <p class="text-xs text-[var(--text-muted)]">
-          Fast, ad-free Speed Post and parcel tracking with real-time delivery status.
+        <p class="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed max-w-xl">
+          High-velocity tracking, algorithmic routing corridor visualization, and high-signal audit trail compaction. Engineered for modern Indian commerce.
         </p>
       </div>
 
-      <!-- Main Search Form -->
-      <form id="tracking-search-form" class="mt-4 flex flex-col sm:flex-row items-center gap-2">
-        <div class="relative w-full flex-1">
-          <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-subtle)] pointer-events-none">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </div>
+      <!-- Command-Bar Tracking Search Form -->
+      <form id="tracking-search-form" class="mt-4 space-y-3">
+        <div class="relative flex flex-col sm:flex-row items-center gap-2 p-1.5 rounded-xl border border-[var(--border)] bg-[var(--bg-page)] shadow-lg focus-within:border-red-500/80 focus-within:ring-1 focus-within:ring-red-500/80 transition-all">
+          <div class="relative w-full flex-1 flex items-center">
+            <div class="pl-3.5 pr-2 text-[var(--text-subtle)] pointer-events-none">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
 
-          <input
-            id="consignment-input"
-            type="text"
-            name="consignment"
-            value={initialAwb}
-            placeholder="Enter 13-character AWB (e.g. EE710744405IN)"
-            autocomplete="off"
-            spellcheck="false"
-            required
-            class="w-full h-11 pl-10 pr-20 rounded-md border border-[var(--border)] bg-[var(--bg-page)] text-[var(--text-main)] placeholder-[var(--text-subtle)] text-xs sm:text-sm font-mono font-semibold uppercase tracking-wider focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all shadow-xs"
-          />
+            <input
+              id="consignment-input"
+              type="text"
+              name="consignment"
+              value={initialAwb}
+              placeholder="Enter 13-char Consignment Number (e.g. EE710744405IN)"
+              autocomplete="off"
+              spellcheck="false"
+              required
+              class="w-full h-10 bg-transparent text-[var(--text-main)] placeholder-[var(--text-subtle)] text-xs sm:text-sm font-mono font-semibold uppercase tracking-wider focus:outline-none"
+            />
 
-          <!-- Scanner Trigger Button -->
-          <div class="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center">
+            <!-- Camera Barcode/QR Scanner Trigger -->
             <button
               id="open-scanner-btn"
               type="button"
-              class="h-8 px-2 rounded border border-[var(--border)] bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] text-xs font-medium text-[var(--text-muted)] hover:text-red-500 flex items-center gap-1.5 transition-colors focus:outline-none cursor-pointer"
+              class="h-8 px-2.5 mr-1 rounded-md border border-[var(--border)] bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] text-[var(--text-muted)] hover:text-[var(--text-main)] text-xs font-medium flex items-center gap-1.5 transition-colors focus:outline-none cursor-pointer"
               title="Scan Barcode or QR Code with camera"
             >
               <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="3" width="18" height="18" rx="2"></rect>
                 <circle cx="12" cy="12" r="3"></circle>
               </svg>
-              <span class="text-[11px] hidden sm:inline">Camera</span>
+              <span class="text-[11px] font-mono hidden md:inline">SCAN</span>
             </button>
           </div>
+
+          <button
+            type="submit"
+            id="submit-track-btn"
+            class="w-full sm:w-auto h-10 px-6 rounded-lg bg-red-600 hover:bg-red-500 active:bg-red-700 text-white font-semibold text-xs tracking-wider uppercase font-mono shadow-md transition-all flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-red-500 cursor-pointer shrink-0"
+          >
+            <span id="btn-text">Track Consignment</span>
+            <span id="btn-spinner" class="hidden w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+          </button>
         </div>
 
-        <button
-          type="submit"
-          id="submit-track-btn"
-          class="w-full sm:w-auto h-11 px-6 rounded-md bg-red-600 hover:bg-red-500 text-white font-semibold text-xs tracking-wide shadow-xs transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-red-500 cursor-pointer"
-        >
-          <span id="btn-text">Search Consignment</span>
-          <span id="btn-spinner" class="hidden w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-        </button>
+        <!-- Format Hint & Sample Consignments -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] text-[var(--text-subtle)] gap-2 font-mono">
+          <div class="flex items-center gap-1.5">
+            <span class="text-[var(--text-muted)]">Sample Live Pins:</span>
+            <button type="button" class="sample-pin hover:text-red-500 underline cursor-pointer" data-sample="EE710744405IN">EE710744405IN</button>
+            <span>•</span>
+            <button type="button" class="sample-pin hover:text-red-500 underline cursor-pointer" data-sample="CX137150258IN">CX137150258IN</button>
+            <span>•</span>
+            <button type="button" class="sample-pin hover:text-red-500 underline cursor-pointer" data-sample="JA075033095IN">JA075033095IN</button>
+          </div>
+          <span class="hidden sm:inline">Standard: 2 Letters + 9 Digits + IN</span>
+        </div>
       </form>
 
-      <!-- Standard Format Guide -->
-      <div class="flex items-center justify-between text-[11px] text-[var(--text-subtle)] pt-1">
-        <span>Standard: 2 Letters + 9 Digits + "IN" (e.g. EE, EM, EK, CX, RT)</span>
-      </div>
-
-      <!-- Recent Consignments (Populated strictly from user's local search history) -->
-      <div id="recent-searches-container" class="hidden pt-2 items-center gap-2 text-xs border-t border-[var(--border)]">
-        <span class="text-[var(--text-subtle)] text-[11px]">Recent Lookups:</span>
+      <!-- Recent Consignments (Saved locally in user browser) -->
+      <div id="recent-searches-container" class="hidden pt-3 items-center gap-2 text-xs border-t border-[var(--border)]">
+        <span class="text-[var(--text-subtle)] text-[11px] font-mono">Recent Lookups:</span>
         <div id="recent-chips" class="inline-flex flex-wrap gap-1.5"></div>
-        <button id="clear-recent-btn" type="button" class="text-[10px] text-[var(--text-subtle)] hover:text-red-500 underline ml-auto cursor-pointer">
+        <button id="clear-recent-btn" type="button" class="text-[10px] text-[var(--text-subtle)] hover:text-red-500 underline ml-auto cursor-pointer font-mono">
           Clear History
         </button>
       </div>
     </div>
   </div>
 
+  <!-- Interactive Telemetry Visualizer: Isometric Postal Hub & Algorithmic Radar -->
+  <div class="space-y-4">
+    <div class="flex items-center justify-between border-b border-[var(--border)] pb-2">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        <h2 class="text-xs font-mono font-bold uppercase tracking-wider text-[var(--text-main)]">
+          Postal Infrastructure Visualizer
+        </h2>
+      </div>
+
+      <!-- Visual View Switcher (Isometric vs Algorithmic Radar) -->
+      <div class="flex items-center gap-1 bg-[var(--bg-page)] p-0.5 rounded-lg border border-[var(--border)] text-[11px] font-mono">
+        <button
+          id="btn-view-radar"
+          type="button"
+          class="px-2.5 py-1 rounded-md text-[var(--text-main)] bg-[var(--bg-card)] font-semibold transition-all cursor-pointer shadow-xs"
+        >
+          Corridor Radar (Canvas)
+        </button>
+        <button
+          id="btn-view-iso"
+          type="button"
+          class="px-2.5 py-1 rounded-md text-[var(--text-muted)] hover:text-[var(--text-main)] transition-all cursor-pointer"
+        >
+          3D Sorting Hub (Isometric)
+        </button>
+      </div>
+    </div>
+
+    <!-- Radar Visualizer Container -->
+    <div id="view-radar-container" class="block transition-opacity duration-300">
+      <AlgorithmicCorridorRadar height={340} />
+    </div>
+
+    <!-- Isometric Visualizer Container -->
+    <div id="view-iso-container" class="hidden transition-opacity duration-300 rounded-xl border border-[var(--border)] bg-[#070b09] p-4 flex items-center justify-center">
+      <IsometricPostalHub class="py-2" />
+    </div>
+  </div>
+
   <!-- Error Alert Container -->
-  <div id="tracking-error" class="hidden p-3.5 rounded-md bg-red-950/20 border border-red-500/30 text-red-400 text-xs font-medium max-w-xl mx-auto flex items-start gap-2.5">
-    <span class="text-sm">⚠️</span>
-    <div id="error-message"></div>
+  <div id="tracking-error" class="hidden p-4 rounded-xl bg-red-950/30 border border-red-500/30 text-red-400 text-xs font-medium max-w-xl mx-auto flex items-start gap-3">
+    <span class="text-base">⚠️</span>
+    <div id="error-message" class="font-mono leading-relaxed"></div>
   </div>
 
   <!-- Dynamic Results Container -->
-  <div id="results-view" class={initialData ? 'space-y-6' : 'hidden space-y-6'}>
+  <div id="results-view" class={initialData ? 'space-y-8' : 'hidden space-y-8'}>
     {initialData && (
       <>
         <TrackingTimeline data={initialData} />
@@ -134,6 +197,43 @@ const { initialData = null, initialAwb = '' } = Astro.props;
   const recentChips = document.getElementById('recent-chips');
   const clearRecentBtn = document.getElementById('clear-recent-btn');
 
+  // Visualizer Tab Switching
+  const btnRadar = document.getElementById('btn-view-radar');
+  const btnIso = document.getElementById('btn-view-iso');
+  const viewRadarContainer = document.getElementById('view-radar-container');
+  const viewIsoContainer = document.getElementById('view-iso-container');
+
+  btnRadar?.addEventListener('click', () => {
+    btnRadar.classList.add('bg-zinc-800', 'text-white', 'font-semibold');
+    btnRadar.classList.remove('text-zinc-400');
+    btnIso?.classList.remove('bg-zinc-800', 'text-white', 'font-semibold');
+    btnIso?.classList.add('text-zinc-400');
+
+    viewRadarContainer?.classList.remove('hidden');
+    viewIsoContainer?.classList.add('hidden');
+  });
+
+  btnIso?.addEventListener('click', () => {
+    btnIso.classList.add('bg-zinc-800', 'text-white', 'font-semibold');
+    btnIso.classList.remove('text-zinc-400');
+    btnRadar?.classList.remove('bg-zinc-800', 'text-white', 'font-semibold');
+    btnRadar?.classList.add('text-zinc-400');
+
+    viewIsoContainer?.classList.remove('hidden');
+    viewRadarContainer?.classList.add('hidden');
+  });
+
+  // Sample Pin buttons
+  document.querySelectorAll('.sample-pin').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const sample = btn.getAttribute('data-sample');
+      if (sample && input) {
+        input.value = sample;
+        void executeTrack(sample);
+      }
+    });
+  });
+
   // Load Recents
   function loadRecents() {
     try {
@@ -145,7 +245,7 @@ const { initialData = null, initialAwb = '' } = Astro.props;
           .slice(0, 5)
           .map(
             (awb: string) =>
-              `<button type="button" class="recent-pill px-2 py-0.5 rounded bg-[var(--bg-page)] border border-[var(--border)] font-mono text-[11px] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-red-500/50 cursor-pointer" data-awb="${awb}">${awb}</button>`
+              `<button type="button" class="recent-pill px-2.5 py-1 rounded bg-zinc-900 border border-zinc-700/80 font-mono text-[11px] text-zinc-300 hover:text-white hover:border-red-500/50 cursor-pointer transition-colors" data-awb="${awb}">${awb}</button>`
           )
           .join('');
 
@@ -187,8 +287,8 @@ const { initialData = null, initialAwb = '' } = Astro.props;
     const confetti = (window as unknown as { confetti?: (opts: unknown) => void }).confetti;
     if (typeof confetti === 'function') {
       confetti({
-        particleCount: 60,
-        spread: 50,
+        particleCount: 75,
+        spread: 60,
         origin: { y: 0.6 },
       });
     }
@@ -246,7 +346,7 @@ const { initialData = null, initialAwb = '' } = Astro.props;
       }
       if (resultsView) resultsView.classList.add('hidden');
     } finally {
-      if (btnText) btnText.textContent = 'Search Consignment';
+      if (btnText) btnText.textContent = 'Track Consignment';
       if (btnSpinner) btnSpinner.classList.add('hidden');
     }
   }
@@ -289,12 +389,12 @@ const { initialData = null, initialAwb = '' } = Astro.props;
 
     const statusBadgeClass =
       r.currentStatus === 'delivered'
-        ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/25'
+        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25'
         : r.currentStatus === 'out_for_delivery'
-        ? 'bg-blue-500/10 text-blue-500 border-blue-500/25'
+        ? 'bg-blue-500/10 text-blue-400 border-blue-500/25'
         : r.currentStatus === 'exception'
-        ? 'bg-red-500/10 text-red-500 border-red-500/25'
-        : 'bg-amber-500/10 text-amber-500 border-amber-500/25';
+        ? 'bg-red-500/10 text-red-400 border-red-500/25'
+        : 'bg-amber-500/10 text-amber-400 border-amber-500/25';
 
     // Build smart milestones client-side
     const officeGroups = new Map<string, typeof r.events>();
@@ -316,7 +416,7 @@ const { initialData = null, initialAwb = '' } = Astro.props;
 
       let title = latestInGroup.event;
       let badgeLabel = 'In Transit';
-      let badgeClass = 'bg-amber-500/10 text-amber-500 border-amber-500/25';
+      let badgeClass = 'bg-amber-500/10 text-amber-400 border-amber-500/25';
 
       const upperEvent = latestInGroup.event.toUpperCase();
       const upperOffice = officeName.toUpperCase();
@@ -324,11 +424,11 @@ const { initialData = null, initialAwb = '' } = Astro.props;
       if (upperEvent.includes('DELIVERED') || latestInGroup.status === 'delivered') {
         title = 'Delivered to Recipient';
         badgeLabel = 'Delivered';
-        badgeClass = 'bg-emerald-500/10 text-emerald-500 border-emerald-500/25';
+        badgeClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25';
       } else if (upperEvent.includes('OUT FOR DELIVERY') || latestInGroup.status === 'out_for_delivery') {
         title = `Out for Delivery (${officeName})`;
         badgeLabel = 'Out for Delivery';
-        badgeClass = 'bg-blue-500/10 text-blue-500 border-blue-500/25';
+        badgeClass = 'bg-blue-500/10 text-blue-400 border-blue-500/25';
       } else if (isLast || upperEvent.includes('BOOK') || latestInGroup.status === 'booked') {
         title = `Booked at Origin Office`;
         badgeLabel = 'Origin Booking';
@@ -340,7 +440,7 @@ const { initialData = null, initialAwb = '' } = Astro.props;
       } else {
         title = `Processed at ${officeName}`;
         badgeLabel = 'Transit Office';
-        badgeClass = 'bg-amber-500/10 text-amber-500 border-amber-500/25';
+        badgeClass = 'bg-amber-500/10 text-amber-400 border-amber-500/25';
       }
 
       return {
@@ -358,22 +458,22 @@ const { initialData = null, initialAwb = '' } = Astro.props;
 
     resultsView.innerHTML = `
       <div class="space-y-6">
-        <!-- Astryx Detail Header & Milestone Stepper -->
-        <div class="astryx-card p-6">
-          <div class="flex items-center justify-between mb-6 flex-wrap gap-3 pb-4 border-b border-[var(--border)]">
+        <!-- Detail Header & Milestone Stepper -->
+        <div class="rounded-xl border border-zinc-800 bg-[#0d0e12] p-6 shadow-xl">
+          <div class="flex items-center justify-between mb-6 flex-wrap gap-3 pb-4 border-b border-zinc-800">
             <div>
-              <span class="text-[11px] uppercase tracking-wider text-[var(--text-subtle)] font-bold">Consignment Identifier</span>
+              <span class="text-[11px] font-mono uppercase tracking-wider text-zinc-500 font-bold">Consignment Identifier</span>
               <div class="flex items-center gap-3 mt-1">
-                <h2 class="text-xl sm:text-2xl font-bold font-mono tracking-tight text-[var(--text-main)]">
+                <h2 class="text-xl sm:text-2xl font-bold font-mono tracking-tight text-white">
                   ${r.consignmentNumber}
                 </h2>
-                <button type="button" id="copy-dyn-btn" class="px-2 py-0.5 rounded text-xs font-medium border border-[var(--border)] bg-[var(--bg-page)] text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors cursor-pointer">
-                  Copy
+                <button type="button" id="copy-dyn-btn" class="px-2.5 py-1 rounded text-xs font-mono font-medium border border-zinc-700 bg-zinc-800 text-zinc-300 hover:text-white transition-colors cursor-pointer">
+                  COPY
                 </button>
               </div>
             </div>
             <div class="flex items-center gap-2">
-              <span class="inline-flex items-center rounded-md border px-2.5 py-1 text-xs font-semibold gap-1.5 ${statusBadgeClass}">
+              <span class="inline-flex items-center rounded-md border px-3 py-1 text-xs font-semibold gap-1.5 ${statusBadgeClass}">
                 <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
                 <span>${r.statusLabel}</span>
               </span>
@@ -381,7 +481,7 @@ const { initialData = null, initialAwb = '' } = Astro.props;
           </div>
 
           <div class="relative py-2">
-            <div class="hidden sm:block absolute top-5 left-6 right-6 h-0.5 bg-[var(--border)] -z-0">
+            <div class="hidden sm:block absolute top-5 left-6 right-6 h-0.5 bg-zinc-800 -z-0">
               <div class="h-full bg-red-600 transition-all duration-500" style="width: ${(currentStep / 4) * 100}%"></div>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-5 gap-4 relative z-10">
@@ -390,19 +490,19 @@ const { initialData = null, initialAwb = '' } = Astro.props;
                   const isDone = idx < currentStep;
                   const isCur = idx === currentStep;
                   const nodeBg = isCur
-                    ? 'bg-red-600 text-white ring-2 ring-red-500/30'
+                    ? 'bg-red-600 text-white ring-4 ring-red-500/20'
                     : isDone
                     ? 'bg-emerald-600 text-white'
-                    : 'bg-[var(--bg-page)] border border-[var(--border)] text-[var(--text-subtle)]';
+                    : 'bg-zinc-900 border border-zinc-800 text-zinc-500';
 
                   return `
                     <div class="flex sm:flex-col items-center sm:text-center gap-3 sm:gap-1.5">
-                      <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${nodeBg}">
+                      <div class="w-8 h-8 rounded-full flex items-center justify-center font-mono font-bold text-xs shrink-0 ${nodeBg}">
                         ${isDone ? '✓' : idx + 1}
                       </div>
                       <div class="text-left sm:text-center">
-                        <p class="text-xs font-semibold leading-tight ${isCur ? 'text-red-500' : 'text-[var(--text-main)]'}">${step.label}</p>
-                        <p class="text-[11px] text-[var(--text-subtle)] truncate max-w-[140px]">${step.desc}</p>
+                        <p class="text-xs font-semibold leading-tight ${isCur ? 'text-red-400 font-bold' : 'text-zinc-200'}">${step.label}</p>
+                        <p class="text-[11px] text-zinc-500 truncate max-w-[140px] font-mono">${step.desc}</p>
                       </div>
                     </div>
                   `;
@@ -412,37 +512,37 @@ const { initialData = null, initialAwb = '' } = Astro.props;
           </div>
         </div>
 
-        <!-- Astryx Metadata Data Grid -->
+        <!-- Metadata Grid -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div class="p-3.5 rounded-md border border-[var(--border)] bg-[var(--bg-card)]">
-            <span class="text-[10px] uppercase font-semibold text-[var(--text-subtle)] block">Article Classification</span>
-            <strong class="text-xs sm:text-sm font-semibold text-[var(--text-main)] mt-0.5 block truncate">${r.articleType}</strong>
+          <div class="p-4 rounded-xl border border-zinc-800 bg-[#0d0e12]">
+            <span class="text-[10px] font-mono uppercase font-semibold text-zinc-500 block">Article Type</span>
+            <strong class="text-xs sm:text-sm font-semibold text-zinc-200 mt-1 block truncate">${r.articleType}</strong>
           </div>
-          <div class="p-3.5 rounded-md border border-[var(--border)] bg-[var(--bg-card)]">
-            <span class="text-[10px] uppercase font-semibold text-[var(--text-subtle)] block">Booking Office</span>
-            <strong class="text-xs sm:text-sm font-semibold text-[var(--text-main)] mt-0.5 block truncate">${r.bookedAt}</strong>
+          <div class="p-4 rounded-xl border border-zinc-800 bg-[#0d0e12]">
+            <span class="text-[10px] font-mono uppercase font-semibold text-zinc-500 block">Booking Hub</span>
+            <strong class="text-xs sm:text-sm font-semibold text-zinc-200 mt-1 block truncate">${r.bookedAt}</strong>
           </div>
-          <div class="p-3.5 rounded-md border border-[var(--border)] bg-[var(--bg-card)]">
-            <span class="text-[10px] uppercase font-semibold text-[var(--text-subtle)] block">Destination Office</span>
-            <strong class="text-xs sm:text-sm font-semibold text-[var(--text-main)] mt-0.5 block truncate font-mono">${r.destinationOffice || r.destinationPincode}</strong>
+          <div class="p-4 rounded-xl border border-zinc-800 bg-[#0d0e12]">
+            <span class="text-[10px] font-mono uppercase font-semibold text-zinc-500 block">Destination</span>
+            <strong class="text-xs sm:text-sm font-semibold text-zinc-200 mt-1 block truncate font-mono">${r.destinationOffice || r.destinationPincode}</strong>
           </div>
-          <div class="p-3.5 rounded-md border border-[var(--border)] bg-[var(--bg-card)]">
-            <span class="text-[10px] uppercase font-semibold text-[var(--text-subtle)] block">Current State</span>
-            <strong class="text-xs sm:text-sm font-semibold text-[var(--text-main)] mt-0.5 block truncate">${r.statusLabel}</strong>
+          <div class="p-4 rounded-xl border border-zinc-800 bg-[#0d0e12]">
+            <span class="text-[10px] font-mono uppercase font-semibold text-zinc-500 block">Current Status</span>
+            <strong class="text-xs sm:text-sm font-semibold text-zinc-200 mt-1 block truncate">${r.statusLabel}</strong>
           </div>
         </div>
 
         <!-- Smart Milestones Audit Trail -->
-        <div class="astryx-card p-6">
-          <div class="flex items-center justify-between pb-3 mb-4 border-b border-[var(--border)]">
-            <div class="flex items-center gap-2">
-              <h3 class="text-xs font-bold uppercase tracking-wider text-[var(--text-main)]">Transit Milestones</h3>
-              <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                Smart View (${smartMilestones.length} Hubs)
+        <div class="rounded-xl border border-zinc-800 bg-[#0d0e12] p-6 shadow-xl">
+          <div class="flex items-center justify-between pb-3 mb-6 border-b border-zinc-800">
+            <div class="flex items-center gap-2.5">
+              <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-white">Transit Milestones</h3>
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                Compacted (${smartMilestones.length} Hubs)
               </span>
             </div>
-            <button type="button" onclick="window.print()" class="text-xs font-medium text-[var(--text-muted)] hover:text-[var(--text-main)] flex items-center gap-1.5 focus:outline-none cursor-pointer">
-              <span>Print Dispatch Slip</span>
+            <button type="button" onclick="window.print()" class="text-xs font-mono text-zinc-400 hover:text-white flex items-center gap-1.5 focus:outline-none cursor-pointer transition-colors">
+              <span>PRINT SLIP ↗</span>
             </button>
           </div>
           
@@ -451,23 +551,23 @@ const { initialData = null, initialAwb = '' } = Astro.props;
             ${smartMilestones
               .map(
                 (m, i) => `
-              <div class="flex items-start gap-3.5 text-xs">
+              <div class="flex items-start gap-4 text-xs">
                 <div class="w-24 shrink-0 text-right">
-                  <span class="font-mono font-semibold text-[var(--text-main)] block">${m.date}</span>
-                  <span class="font-mono text-[10px] text-[var(--text-subtle)] block">${m.time}</span>
+                  <span class="font-mono font-semibold text-zinc-200 block">${m.date}</span>
+                  <span class="font-mono text-[10px] text-zinc-500 block">${m.time}</span>
                 </div>
                 <div class="relative flex flex-col items-center shrink-0 self-stretch">
-                  <div class="w-2.5 h-2.5 rounded-full mt-1.5 ${m.isLatest ? (r.currentStatus === 'delivered' ? 'bg-emerald-500 ring-2 ring-emerald-500/30' : 'bg-red-500 ring-2 ring-red-500/30') : 'bg-[var(--border-subtle)]'}"></div>
-                  ${i !== smartMilestones.length - 1 ? '<div class="w-px flex-1 bg-[var(--border)] my-1"></div>' : ''}
+                  <div class="w-2.5 h-2.5 rounded-full mt-1.5 ${m.isLatest ? (r.currentStatus === 'delivered' ? 'bg-emerald-500 ring-4 ring-emerald-500/25' : 'bg-red-500 ring-4 ring-red-500/25') : 'bg-zinc-700'}"></div>
+                  ${i !== smartMilestones.length - 1 ? '<div class="w-px flex-1 bg-zinc-800 my-1"></div>' : ''}
                 </div>
-                <div class="flex-1 pb-2">
+                <div class="flex-1 pb-3">
                   <div class="flex items-center gap-2 flex-wrap">
-                    <span class="font-bold text-sm text-[var(--text-main)]">${m.title}</span>
-                    <span class="px-2 py-0.5 rounded text-[10px] font-medium border ${m.badgeClass}">${m.badgeLabel}</span>
-                    ${m.scansCount > 1 ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-[var(--bg-page)] text-[var(--text-subtle)] border border-[var(--border)]">${m.scansCount} internal scans</span>` : ''}
+                    <span class="font-bold text-sm text-zinc-100">${m.title}</span>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-mono font-medium border ${m.badgeClass}">${m.badgeLabel}</span>
+                    ${m.scansCount > 1 ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-zinc-900 text-zinc-400 border border-zinc-800">${m.scansCount} internal scans</span>` : ''}
                   </div>
-                  <p class="text-[var(--text-muted)] text-xs mt-1 font-medium">${m.office}</p>
-                  ${m.details ? `<p class="text-[11px] text-[var(--text-subtle)] mt-1">${m.details}</p>` : ''}
+                  <p class="text-zinc-400 text-xs mt-1 font-medium font-mono">${m.office}</p>
+                  ${m.details ? `<p class="text-[11px] text-zinc-500 mt-1 font-mono">${m.details}</p>` : ''}
                 </div>
               </div>
             `
@@ -476,33 +576,33 @@ const { initialData = null, initialAwb = '' } = Astro.props;
           </div>
 
           <!-- Raw Scans Accordion Trigger -->
-          <div class="mt-6 pt-4 border-t border-[var(--border)] flex items-center justify-between">
+          <div class="mt-6 pt-4 border-t border-zinc-800 flex items-center justify-between">
             <button
               id="dyn-toggle-raw-btn"
               type="button"
-              class="inline-flex items-center gap-1.5 text-xs font-semibold text-red-500 hover:text-red-400 focus:outline-none cursor-pointer transition-colors"
+              class="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-red-400 hover:text-red-300 focus:outline-none cursor-pointer transition-colors"
             >
               <span id="dyn-raw-label">Show Complete Scan Log (${r.events.length} Scans)</span>
               <span id="dyn-raw-arrow" class="transition-transform duration-200">▾</span>
             </button>
-            <span class="text-[11px] text-[var(--text-subtle)] font-mono">Raw India Post RMS Logs</span>
+            <span class="text-[11px] text-zinc-500 font-mono">Raw India Post RMS Logs</span>
           </div>
 
-          <div id="dyn-raw-container" class="hidden mt-4 pt-4 border-t border-[var(--border)] space-y-3">
+          <div id="dyn-raw-container" class="hidden mt-4 pt-4 border-t border-zinc-800/80 space-y-3">
             ${r.events
               .map(
                 (ev) => `
-              <div class="flex items-start gap-3.5 text-xs py-1 border-b border-[var(--border)]/40 last:border-none">
+              <div class="flex items-start gap-4 text-xs py-1.5 border-b border-zinc-800/50 last:border-none">
                 <div class="w-24 shrink-0 text-right">
-                  <span class="font-mono text-xs text-[var(--text-muted)] block">${ev.date}</span>
-                  <span class="font-mono text-[10px] text-[var(--text-subtle)] block">${ev.time}</span>
+                  <span class="font-mono text-xs text-zinc-400 block">${ev.date}</span>
+                  <span class="font-mono text-[10px] text-zinc-500 block">${ev.time}</span>
                 </div>
                 <div class="flex-1">
                   <div class="flex items-center gap-2">
-                    <span class="font-mono font-semibold text-xs text-[var(--text-main)]">${ev.event}</span>
-                    <span class="text-[10px] font-mono text-[var(--text-subtle)] bg-[var(--bg-page)] px-1.5 py-0.5 rounded border border-[var(--border)]">${ev.office}</span>
+                    <span class="font-mono font-semibold text-xs text-zinc-200">${ev.event}</span>
+                    <span class="text-[10px] font-mono text-zinc-400 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800">${ev.office}</span>
                   </div>
-                  ${ev.details ? `<p class="text-[11px] text-[var(--text-subtle)] mt-0.5 font-mono">${ev.details}</p>` : ''}
+                  ${ev.details ? `<p class="text-[11px] text-zinc-500 mt-0.5 font-mono">${ev.details}</p>` : ''}
                 </div>
               </div>
             `
@@ -512,14 +612,14 @@ const { initialData = null, initialAwb = '' } = Astro.props;
         </div>
 
         <!-- Route Map Container -->
-        <div class="relative w-full h-[340px] sm:h-[400px] rounded-lg overflow-hidden border border-[var(--border)] bg-[var(--bg-card)]">
-          <div id="leaflet-route-map" class="w-full h-full min-h-[340px]" style="min-height: 340px; height: 100%;"></div>
-          <div class="absolute top-3 right-3 z-[1000] px-2.5 py-1 rounded bg-[var(--bg-card)]/95 border border-[var(--border)] text-xs font-medium text-[var(--text-main)] flex items-center gap-2 shadow-xs backdrop-blur-xs">
+        <div class="relative w-full h-[360px] sm:h-[420px] rounded-xl overflow-hidden border border-zinc-800 bg-[#0d0e12] shadow-xl">
+          <div id="leaflet-route-map" class="w-full h-full min-h-[360px]" style="min-height: 360px; height: 100%;"></div>
+          <div class="absolute top-3 right-3 z-[1000] px-3 py-1 rounded-md bg-zinc-950/90 border border-zinc-800 text-xs font-mono font-medium text-white flex items-center gap-2 shadow-md backdrop-blur-md">
             <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-            <span class="font-heading font-semibold text-[11px] uppercase tracking-wider">Delivery Route Corridor</span>
+            <span class="font-semibold text-[11px] uppercase tracking-wider">Transit Corridor Polyline</span>
           </div>
-          <div class="absolute bottom-3 left-3 z-[1000] px-2 py-0.5 rounded bg-[var(--bg-card)]/95 border border-[var(--border)] text-[10px] text-[var(--text-subtle)] font-mono shadow-xs pointer-events-none backdrop-blur-xs">
-            Transit Routing Network
+          <div class="absolute bottom-3 left-3 z-[1000] px-2.5 py-1 rounded-md bg-zinc-950/90 border border-zinc-800 text-[10px] text-zinc-400 font-mono shadow-md pointer-events-none backdrop-blur-md">
+            OpenStreetMap Geospatial Telemetry
           </div>
         </div>
       </div>

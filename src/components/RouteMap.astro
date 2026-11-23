@@ -8,17 +8,17 @@ interface Props {
 const { route } = Astro.props;
 ---
 
-<div class="relative w-full h-[340px] sm:h-[400px] rounded-lg overflow-hidden border border-[var(--border)] bg-[var(--bg-card)]">
-  <div id="leaflet-route-map" class="w-full h-full min-h-[340px]" style="min-height: 340px; height: 100%;"></div>
+<div class="relative w-full h-[360px] sm:h-[420px] rounded-xl overflow-hidden border border-zinc-800 bg-[#0d0e12] shadow-xl">
+  <div id="leaflet-route-map" class="w-full h-full min-h-[360px]" style="min-height: 360px; height: 100%;"></div>
   
   <!-- Overlay Corridor Badge -->
-  <div class="absolute top-3 right-3 z-[1000] px-2.5 py-1 rounded bg-[var(--bg-card)]/95 border border-[var(--border)] text-xs font-medium text-[var(--text-main)] flex items-center gap-2 shadow-xs backdrop-blur-xs">
+  <div class="absolute top-3 right-3 z-[1000] px-3 py-1 rounded-md bg-zinc-950/90 border border-zinc-800 text-xs font-mono font-medium text-white flex items-center gap-2 shadow-md backdrop-blur-md">
     <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-    <span class="font-heading font-semibold text-[11px] uppercase tracking-wider">Delivery Route Corridor</span>
+    <span class="font-semibold text-[11px] uppercase tracking-wider">Transit Corridor Polyline</span>
   </div>
 
-  <div class="absolute bottom-3 left-3 z-[1000] px-2 py-0.5 rounded bg-[var(--bg-card)]/95 border border-[var(--border)] text-[10px] text-[var(--text-subtle)] font-mono shadow-xs pointer-events-none backdrop-blur-xs">
-    Transit Routing Network
+  <div class="absolute bottom-3 left-3 z-[1000] px-2.5 py-1 rounded-md bg-zinc-950/90 border border-zinc-800 text-[10px] text-zinc-400 font-mono shadow-md pointer-events-none backdrop-blur-md">
+    OpenStreetMap Geospatial Telemetry
   </div>
 </div>
 

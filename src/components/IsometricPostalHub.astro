@@ -1,0 +1,260 @@
+---
+// Isometric Postal Hub Illustration based on illustration-isometric-mono
+// True 30° isometric projection of an automated India Post Logistics & Telemetry Hub
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<div class={`relative flex items-center justify-center select-none overflow-hidden py-4 ${className}`} aria-hidden="true">
+  <svg
+    viewBox="0 0 600 440"
+    class="w-full h-auto max-w-[680px] drop-shadow-2xl transition-transform duration-700 hover:scale-[1.02]"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <defs>
+      <!-- Ambient Floor Glow -->
+      <radialGradient id="iso-floor-glow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#10b981" stop-opacity="0.25" />
+        <stop offset="60%" stop-color="#10b981" stop-opacity="0.05" />
+        <stop offset="100%" stop-color="#10b981" stop-opacity="0" />
+      </radialGradient>
+
+      <!-- Conveyor Glow -->
+      <linearGradient id="conveyor-flow" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#34d399" />
+        <stop offset="50%" stop-color="#10b981" />
+        <stop offset="100%" stop-color="#059669" />
+      </linearGradient>
+
+      <!-- Laser Scanner Beam -->
+      <linearGradient id="scan-beam" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#ef4444" stop-opacity="0.8" />
+        <stop offset="100%" stop-color="#ef4444" stop-opacity="0.05" />
+      </linearGradient>
+
+      <!-- Filter for Soft Drop Shadow -->
+      <filter id="iso-shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="16" stdDeviation="16" flood-color="#059669" flood-opacity="0.18" />
+      </filter>
+    </defs>
+
+    <!-- Floor Glow Oval -->
+    <ellipse cx="300" cy="270" rx="240" ry="120" fill="url(#iso-floor-glow)" />
+
+    <!-- BASE PLATFORM SLAB (True Iso Rounded Hexagonal Slab) -->
+    <!-- Plan size: 260x260, projected at 30° -->
+    <g filter="url(#iso-shadow)">
+      <!-- Under-slab shadow -->
+      <path
+        d="M 120 230 L 300 126 L 480 230 L 480 248 L 300 352 L 120 248 Z"
+        fill="#042f24"
+        opacity="0.5"
+      />
+
+      <!-- Slab Left Face (Right-facing normal: mid shade) -->
+      <path
+        d="M 120 230 L 300 334 L 300 352 L 120 248 Z"
+        fill="#064e3b"
+        stroke="#022c22"
+        stroke-width="0.9"
+        stroke-linejoin="round"
+      />
+
+      <!-- Slab Right Face (Left-facing normal: deep shade) -->
+      <path
+        d="M 300 334 L 480 230 L 480 248 L 300 352 Z"
+        fill="#022c22"
+        stroke="#022c22"
+        stroke-width="0.9"
+        stroke-linejoin="round"
+      />
+
+      <!-- Slab Top Face (Upward normal: lightest surface) -->
+      <path
+        d="M 120 230 L 300 126 L 480 230 L 300 334 Z"
+        fill="#0f2922"
+        stroke="#10b981"
+        stroke-opacity="0.4"
+        stroke-width="0.9"
+        stroke-linejoin="round"
+      />
+
+      <!-- Slab Inner Inset Guide Line (Awwwards/Mono detail) -->
+      <path
+        d="M 140 230 L 300 138 L 460 230 L 300 322 Z"
+        fill="none"
+        stroke="#10b981"
+        stroke-opacity="0.25"
+        stroke-width="0.8"
+        stroke-dasharray="3 3"
+      />
+    </g>
+
+    <!-- LOGISTICS STRUCTURE 1: NATIONAL SORTING RACK TOWER (Top-Left Hub) -->
+    <g class="iso-object">
+      <!-- Cast Shadow on Slab -->
+      <path d="M 210 178 L 290 132 L 310 144 L 230 190 Z" fill="#031f17" opacity="0.6" />
+
+      <!-- Server / Mail Sorting Rack Body -->
+      <!-- Left Face -->
+      <path d="M 210 178 L 260 207 L 260 127 L 210 98 Z" fill="#065f46" stroke="#022c22" stroke-width="0.9" />
+      <!-- Right Face -->
+      <path d="M 260 207 L 310 178 L 310 98 L 260 127 Z" fill="#044e39" stroke="#022c22" stroke-width="0.9" />
+      <!-- Top Face -->
+      <path d="M 210 98 L 260 69 L 310 98 L 260 127 Z" fill="#10b981" fill-opacity="0.8" stroke="#022c22" stroke-width="0.9" />
+
+      <!-- Front Face Details: Mail Storage Slots & Status LEDs -->
+      <!-- Slot 1 -->
+      <path d="M 264 135 L 306 111" stroke="#022c22" stroke-width="1.2" />
+      <circle cx="270" cy="132" r="1.5" fill="#34d399" />
+      <circle cx="278" cy="128" r="1.5" fill="#34d399" />
+      <!-- Slot 2 -->
+      <path d="M 264 150 L 306 126" stroke="#022c22" stroke-width="1.2" />
+      <circle cx="270" cy="147" r="1.5" fill="#34d399" />
+      <circle cx="278" cy="143" r="1.5" fill="#f59e0b" />
+      <!-- Slot 3 -->
+      <path d="M 264 165 L 306 141" stroke="#022c22" stroke-width="1.2" />
+      <circle cx="270" cy="162" r="1.5" fill="#34d399" />
+      <circle cx="278" cy="158" r="1.5" fill="#34d399" />
+      <!-- Slot 4 -->
+      <path d="M 264 180 L 306 156" stroke="#022c22" stroke-width="1.2" />
+      <circle cx="270" cy="177" r="1.5" fill="#ef4444" />
+      <circle cx="278" cy="173" r="1.5" fill="#34d399" />
+      <!-- Slot 5 -->
+      <path d="M 264 195 L 306 171" stroke="#022c22" stroke-width="1.2" />
+      <circle cx="270" cy="192" r="1.5" fill="#34d399" />
+      <circle cx="278" cy="188" r="1.5" fill="#34d399" />
+
+      <!-- High-speed NSH Label on Left Face -->
+      <text x="226" y="152" transform="rotate(30 226 152) skewX(-30)" font-family="monospace" font-size="6.5" font-weight="700" fill="#a7f3d0" letter-spacing="1">NSH-HUB</text>
+    </g>
+
+    <!-- LOGISTICS STRUCTURE 2: AUTOMATED PARCEL CONVEYOR SYSTEM (Center-Right) -->
+    <g class="iso-conveyor">
+      <!-- Conveyor Ramp Legs -->
+      <path d="M 200 240 L 200 262" stroke="#044e39" stroke-width="3" stroke-linecap="round" />
+      <path d="M 290 292 L 290 314" stroke="#044e39" stroke-width="3" stroke-linecap="round" />
+      <path d="M 370 246 L 370 268" stroke="#044e39" stroke-width="3" stroke-linecap="round" />
+
+      <!-- Main Conveyor Belt Bed -->
+      <path
+        d="M 180 230 L 280 288 L 380 230 L 280 172 Z"
+        fill="#064e3b"
+        stroke="#022c22"
+        stroke-width="1"
+      />
+      <!-- Belt Surface Track -->
+      <path
+        d="M 195 230 L 280 279 L 365 230 L 280 181 Z"
+        fill="#022c22"
+        stroke="#10b981"
+        stroke-width="0.8"
+        stroke-opacity="0.6"
+      />
+
+      <!-- Conveyor Roller Ribs -->
+      <path d="M 215 220 L 230 228" stroke="#059669" stroke-width="1" />
+      <path d="M 235 231 L 250 239" stroke="#059669" stroke-width="1" />
+      <path d="M 255 243 L 270 251" stroke="#059669" stroke-width="1" />
+      <path d="M 290 251 L 305 243" stroke="#059669" stroke-width="1" />
+      <path d="M 310 239 L 325 231" stroke="#059669" stroke-width="1" />
+      <path d="M 330 228 L 345 220" stroke="#059669" stroke-width="1" />
+
+      <!-- SPEED POST PARCEL 1 (In Transit on Belt) -->
+      <g transform="translate(255, 205)">
+        <!-- Box Shadow -->
+        <path d="M 0 18 L 15 26 L 35 15 L 20 6 Z" fill="#011812" opacity="0.6" />
+        <!-- Box Left Face -->
+        <path d="M 0 18 L 16 27 L 16 11 L 0 2 Z" fill="#b91c1c" stroke="#450a0a" stroke-width="0.8" />
+        <!-- Box Right Face -->
+        <path d="M 16 27 L 34 17 L 34 1 L 16 11 Z" fill="#991b1b" stroke="#450a0a" stroke-width="0.8" />
+        <!-- Box Top Face -->
+        <path d="M 0 2 L 16 11 L 34 1 L 18 -8 Z" fill="#ef4444" stroke="#450a0a" stroke-width="0.8" />
+        <!-- Barcode Label on Top -->
+        <path d="M 12 4 L 22 -2" stroke="#fef2f2" stroke-width="1.8" />
+        <path d="M 14 6 L 24 0" stroke="#fef2f2" stroke-width="0.8" />
+      </g>
+
+      <!-- SPEED POST PARCEL 2 (Secondary Cargo Unit) -->
+      <g transform="translate(305, 218)">
+        <!-- Box Left Face -->
+        <path d="M 0 12 L 12 19 L 12 7 L 0 0 Z" fill="#047857" stroke="#022c22" stroke-width="0.7" />
+        <!-- Box Right Face -->
+        <path d="M 12 19 L 24 12 L 24 0 L 12 7 Z" fill="#065f46" stroke="#022c22" stroke-width="0.7" />
+        <!-- Box Top Face -->
+        <path d="M 0 0 L 12 7 L 24 0 L 12 -7 Z" fill="#34d399" stroke="#022c22" stroke-width="0.7" />
+      </g>
+
+      <!-- SCANNING ARCH GATE (Automated Barcode/RFID Portal) -->
+      <g>
+        <!-- Left Pillar -->
+        <path d="M 268 245 L 274 249 L 274 205 L 268 201 Z" fill="#044e39" stroke="#022c22" stroke-width="0.9" />
+        <!-- Right Pillar -->
+        <path d="M 292 231 L 298 235 L 298 191 L 292 187 Z" fill="#022c22" stroke="#022c22" stroke-width="0.9" />
+        <!-- Top Arch Beam -->
+        <path d="M 268 201 L 292 187 L 298 191 L 274 205 Z" fill="#10b981" stroke="#022c22" stroke-width="0.9" />
+
+        <!-- Red Scan Laser Beam Projection -->
+        <polygon points="274,204 292,192 284,240 278,245" fill="url(#scan-beam)" opacity="0.65" />
+      </g>
+    </g>
+
+    <!-- LOGISTICS STRUCTURE 3: TELEMETRY TOWER (Right Edge) -->
+    <g class="iso-antenna">
+      <!-- Tower Plinth -->
+      <path d="M 390 195 L 420 212 L 420 200 L 390 183 Z" fill="#064e3b" stroke="#022c22" stroke-width="0.8" />
+      <path d="M 420 212 L 450 195 L 450 183 L 420 200 Z" fill="#022c22" stroke="#022c22" stroke-width="0.8" />
+      <path d="M 390 183 L 420 166 L 450 183 L 420 200 Z" fill="#10b981" stroke="#022c22" stroke-width="0.8" />
+
+      <!-- Vertical Lattice Mast -->
+      <line x1="420" y1="183" x2="420" y2="70" stroke="#065f46" stroke-width="2.5" />
+      <line x1="416" y1="180" x2="424" y2="180" stroke="#10b981" stroke-width="1" />
+      <line x1="414" y1="150" x2="426" y2="150" stroke="#10b981" stroke-width="1" />
+      <line x1="412" y1="120" x2="428" y2="120" stroke="#10b981" stroke-width="1.2" />
+      <line x1="410" y1="90" x2="430" y2="90" stroke="#10b981" stroke-width="1.5" />
+
+      <!-- Microwave Telemetry Dish -->
+      <ellipse cx="420" cy="85" rx="14" ry="7" fill="#022c22" stroke="#34d399" stroke-width="1.2" />
+      <line x1="420" y1="85" x2="408" y2="75" stroke="#34d399" stroke-width="1.5" stroke-linecap="round" />
+
+      <!-- Pulsing Beacon Light -->
+      <circle cx="420" cy="68" r="3.5" fill="#ef4444" />
+      <circle cx="420" cy="68" r="8" fill="#ef4444" opacity="0.4" class="animate-ping" style="animation-duration: 2s;" />
+    </g>
+
+    <!-- LOGISTICS STRUCTURE 4: PALLET DISPATCH DOCK (Bottom-Left) -->
+    <g class="iso-dock">
+      <!-- Pallet Plinth -->
+      <path d="M 180 255 L 220 278 L 220 286 L 180 263 Z" fill="#044e39" stroke="#022c22" stroke-width="0.8" />
+      <path d="M 220 278 L 255 258 L 255 250 L 220 270 Z" fill="#022c22" stroke="#022c22" stroke-width="0.8" />
+      <path d="M 180 255 L 215 235 L 255 258 L 220 278 Z" fill="#059669" stroke="#022c22" stroke-width="0.8" />
+
+      <!-- Mail Bags Stack -->
+      <ellipse cx="205" cy="254" rx="10" ry="6" fill="#10b981" stroke="#022c22" stroke-width="0.8" />
+      <ellipse cx="225" cy="256" rx="11" ry="6.5" fill="#047857" stroke="#022c22" stroke-width="0.8" />
+      <ellipse cx="215" cy="247" rx="10" ry="6" fill="#34d399" stroke="#022c22" stroke-width="0.8" />
+    </g>
+
+    <!-- TECHNICAL ANNOTATION LABELS (Mono High-Tech SaaS Styling) -->
+    <g class="iso-tags">
+      <!-- Tag 1: National Sorting Hub -->
+      <g transform="translate(140, 80)">
+        <rect x="0" y="0" width="80" height="20" rx="4" fill="#022c22" stroke="#059669" stroke-width="0.8" />
+        <circle cx="8" cy="10" r="2.5" fill="#10b981" />
+        <text x="16" y="13" font-family="'Space Mono', monospace" font-size="8" font-weight="700" fill="#a7f3d0">RMS TMO // 01</text>
+        <line x1="80" y1="10" x2="210" y2="98" stroke="#059669" stroke-width="0.6" stroke-dasharray="2 2" />
+      </g>
+
+      <!-- Tag 2: Laser Scanning Portal -->
+      <g transform="translate(370, 290)">
+        <rect x="0" y="0" width="94" height="20" rx="4" fill="#022c22" stroke="#ef4444" stroke-width="0.8" />
+        <circle cx="8" cy="10" r="2.5" fill="#ef4444" />
+        <text x="16" y="13" font-family="'Space Mono', monospace" font-size="8" font-weight="700" fill="#fca5a5">OPTICAL SCAN 60FPS</text>
+        <line x1="0" y1="10" x2="-80" y2="-55" stroke="#ef4444" stroke-width="0.6" stroke-dasharray="2 2" />
+      </g>
+    </g>
+  </svg>
+</div>

@@ -2,10 +2,10 @@
 const currentPath = Astro.url.pathname;
 ---
 
-<header class="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--bg-card)]/90 backdrop-blur-md transition-colors">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-15 flex items-center justify-between">
+<header class="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--bg-page)]/85 backdrop-blur-md transition-colors">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
     <!-- Brand Logo -->
-    <a href="/" class="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 rounded-lg py-1">
+    <a href="/" class="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 rounded-lg py-1 select-none">
       <div class="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center text-white shadow-xs group-hover:bg-red-500 transition-colors">
         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9"></path>
@@ -13,19 +13,19 @@ const currentPath = Astro.url.pathname;
           <path d="m16 19 2 2 4-4"></path>
         </svg>
       </div>
-      <div>
-        <span class="font-heading font-bold text-base tracking-tight text-[var(--text-main)]">DakPulse</span>
-        <span class="text-[10px] uppercase font-bold text-red-500 ml-1">Beta</span>
+      <div class="flex items-baseline gap-1.5">
+        <span class="font-heading font-bold text-lg tracking-tight text-[var(--text-main)]">DakPulse</span>
+        <span class="font-mono text-[10px] text-zinc-500 font-semibold tracking-wider">v2.5</span>
       </div>
     </a>
 
-    <!-- Nav Links (Astryx Segmented Tabs) -->
-    <nav class="hidden md:flex items-center gap-1 bg-[var(--bg-page)] p-1 rounded-lg border border-[var(--border)]" aria-label="Main Navigation">
+    <!-- Nav Links (SaaS Segmented Tabs) -->
+    <nav class="hidden md:flex items-center gap-1 bg-zinc-900/60 p-1 rounded-lg border border-[var(--border)]" aria-label="Main Navigation">
       <a
         href="/"
         class={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
           currentPath === '/'
-            ? 'bg-[var(--bg-card)] text-[var(--text-main)] shadow-xs font-semibold'
+            ? 'bg-zinc-800 text-[var(--text-main)] shadow-xs font-semibold'
             : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
         }`}
       >
@@ -35,17 +35,17 @@ const currentPath = Astro.url.pathname;
         href="/postage-calculator"
         class={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
           currentPath.startsWith('/postage-calculator')
-            ? 'bg-[var(--bg-card)] text-[var(--text-main)] shadow-xs font-semibold'
+            ? 'bg-zinc-800 text-[var(--text-main)] shadow-xs font-semibold'
             : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
         }`}
       >
-        Postage Calculator
+        Tariff Calculator
       </a>
       <a
         href="/pincode-search"
         class={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
           currentPath.startsWith('/pincode-search')
-            ? 'bg-[var(--bg-card)] text-[var(--text-main)] shadow-xs font-semibold'
+            ? 'bg-zinc-800 text-[var(--text-main)] shadow-xs font-semibold'
             : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
         }`}
       >
@@ -55,7 +55,7 @@ const currentPath = Astro.url.pathname;
         href="/bulk-tracking"
         class={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
           currentPath.startsWith('/bulk-tracking')
-            ? 'bg-[var(--bg-card)] text-[var(--text-main)] shadow-xs font-semibold'
+            ? 'bg-zinc-800 text-[var(--text-main)] shadow-xs font-semibold'
             : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
         }`}
       >
@@ -64,8 +64,15 @@ const currentPath = Astro.url.pathname;
     </nav>
 
     <!-- Controls & Actions -->
-    <div class="flex items-center gap-2.5">
-      <!-- Zero Ads Pill (User preferred message) -->
+    <div class="flex items-center gap-3">
+      <!-- Search Shortcut Pill -->
+      <div class="hidden lg:flex items-center gap-1.5 px-2 py-1 rounded bg-zinc-900 border border-zinc-800 text-[11px] font-mono text-zinc-400">
+        <span>Press</span>
+        <kbd class="px-1.5 py-0.5 rounded bg-zinc-800 border border-zinc-700 text-zinc-300 font-bold">/</kbd>
+        <span>to track</span>
+      </div>
+
+      <!-- Zero Ads Pill -->
       <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
         Zero Ads • 100% Free
@@ -75,7 +82,7 @@ const currentPath = Astro.url.pathname;
       <button
         id="theme-toggle-btn"
         type="button"
-        class="w-8 h-8 rounded-lg border border-[var(--border)] bg-[var(--bg-page)] hover:bg-[var(--bg-card-hover)] text-[var(--text-muted)] hover:text-[var(--text-main)] flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 cursor-pointer"
+        class="w-8 h-8 rounded-lg border border-[var(--border)] bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] text-[var(--text-muted)] hover:text-[var(--text-main)] flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 cursor-pointer"
         title="Toggle dark/light mode"
         aria-label="Toggle theme"
       >
@@ -93,7 +100,7 @@ const currentPath = Astro.url.pathname;
   <div class="md:hidden border-t border-[var(--border)] px-4 py-2 flex items-center justify-around bg-[var(--bg-card)]">
     <a
       href="/"
-      class={`text-xs font-semibold py-1 px-2 rounded-md ${
+      class={`text-xs font-semibold py-1 px-2.5 rounded-md ${
         currentPath === '/' ? 'bg-red-500/10 text-red-500' : 'text-[var(--text-muted)]'
       }`}
     >
@@ -101,15 +108,15 @@ const currentPath = Astro.url.pathname;
     </a>
     <a
       href="/postage-calculator"
-      class={`text-xs font-semibold py-1 px-2 rounded-md ${
+      class={`text-xs font-semibold py-1 px-2.5 rounded-md ${
         currentPath.startsWith('/postage-calculator') ? 'bg-red-500/10 text-red-500' : 'text-[var(--text-muted)]'
       }`}
     >
-      Rates
+      Calculator
     </a>
     <a
       href="/pincode-search"
-      class={`text-xs font-semibold py-1 px-2 rounded-md ${
+      class={`text-xs font-semibold py-1 px-2.5 rounded-md ${
         currentPath.startsWith('/pincode-search') ? 'bg-red-500/10 text-red-500' : 'text-[var(--text-muted)]'
       }`}
     >
@@ -117,7 +124,7 @@ const currentPath = Astro.url.pathname;
     </a>
     <a
       href="/bulk-tracking"
-      class={`text-xs font-semibold py-1 px-2 rounded-md ${
+      class={`text-xs font-semibold py-1 px-2.5 rounded-md ${
         currentPath.startsWith('/bulk-tracking') ? 'bg-red-500/10 text-red-500' : 'text-[var(--text-muted)]'
       }`}
     >
@@ -126,13 +133,14 @@ const currentPath = Astro.url.pathname;
   </div>
 </header>
 
-<script is:inline>
-  const toggleBtn = document.getElementById('theme-toggle-btn');
-  toggleBtn?.addEventListener('click', () => {
-    const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
-    const nextTheme = isDark ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', nextTheme);
-    localStorage.setItem('dakpulse-theme', nextTheme);
-    window.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme: nextTheme } }));
+<script>
+  const themeToggle = document.getElementById('theme-toggle-btn');
+  themeToggle?.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme') || 'dark';
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try {
+      localStorage.setItem('dakpulse-theme', next);
+    } catch (e) {}
   });
 </script>

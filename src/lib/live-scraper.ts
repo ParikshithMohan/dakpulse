@@ -77,20 +77,35 @@ function formatDisplayDate(isoString: string): { date: string; time: string } {
   }
 }
 
+// In-Memory Telemetry Cache for sub-millisecond repeat queries
+interface CacheEntry {
+  data: TrackingResult;
+  timestamp: number;
+  ttl: number;
+}
+
+const TRACKING_CACHE = new Map<string, CacheEntry>();
+
 /**
  * Fetch live India Post consignment tracking from live portal.
- * Returns null if parcel not found or offline.
+ * Uses high-velocity cache (sub-millisecond repeat queries) and resilient fallback.
  */
 export async function fetchLiveSpeedPost(awb: string): Promise<TrackingResult | null> {
   const cleaned = awb.trim().toUpperCase().replace(/[\s-]/g, '');
   if (!cleaned) return null;
+
+  // 1. Check in-memory telemetry cache
+  const cached = TRACKING_CACHE.get(cleaned);
+  if (cached && Date.now() - cached.timestamp < cached.ttl) {
+    return cached.data;
+  }
 
   // Upstream postal edge mirror
   const EDGE_GATEWAY = Buffer.from('aHR0cHM6Ly9teXNwZWVkcG9zdC5jb20vdHJhY2stZW1zLXNwZWVkcG9zdD9uPQ==', 'base64').toString('utf8');
   const url = `${EDGE_GATEWAY}${encodeURIComponent(cleaned)}`;
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
+    const timeout = setTimeout(() => controller.abort(), 8000);
 
     const res = await fetch(url, {
       signal: controller.signal,
@@ -239,7 +254,7 @@ export async function fetchLiveSpeedPost(awb: string): Promise<TrackingResult | 
       recipient = 'Recipient Verified';
     }
 
-    return {
+    const trackingResult: TrackingResult = {
       consignmentNumber: cleaned,
       articleType,
       bookedAt: `${bookedAt}${originPincode ? ` (${originPincode})` : ''}`,
@@ -253,6 +268,16 @@ export async function fetchLiveSpeedPost(awb: string): Promise<TrackingResult | 
       events,
       route: routeCoords,
     };
+
+    // Cache result: 1 hour for delivered consignments, 2 minutes for in-transit
+    const cacheTtl = overallStatus === 'delivered' ? 3600000 : 120000;
+    TRACKING_CACHE.set(cleaned, {
+      data: trackingResult,
+      timestamp: Date.now(),
+      ttl: cacheTtl,
+    });
+
+    return trackingResult;
   } catch (err) {
     return null;
   }
